@@ -5,3 +5,5 @@
 /.vs
 /Library/bin
 /Library/obj
+/Library.Objects/bin
+/Library.Objects/obj
