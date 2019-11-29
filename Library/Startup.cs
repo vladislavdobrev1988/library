@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Library.Filters;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Library
@@ -9,19 +9,17 @@ namespace Library
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddMvcCore()
+                .AddJsonFormatters()
+                .AddMvcOptions(options => options.Filters.Add<AuthorizationFilter>());
+
+            ApplicationServices.Register(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseMvc();
         }
     }
 }
