@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Library.Filters;
+using Library.Helpers.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,10 @@ namespace Library.Tests.WebApiTests
         private Mock<HttpRequest> _httpRequestMock;
         private Mock<IHeaderDictionary> _httpHeadersMock;
 
+        private Mock<IAccessTokenStore> _accessTokenStoreMock;
+
         private ActionContext _actionContext;
+
         private AuthorizationFilter _filter;
 
         [TestInitialize]
@@ -35,6 +39,8 @@ namespace Library.Tests.WebApiTests
             _httpContextMock = new Mock<HttpContext>();
             _httpRequestMock = new Mock<HttpRequest>();
             _httpHeadersMock = new Mock<IHeaderDictionary>();
+
+            _accessTokenStoreMock = new Mock<IAccessTokenStore>();
 
             _httpRequestMock.Setup(x => x.Headers).Returns(_httpHeadersMock.Object);
             _httpContextMock.Setup(x => x.Request).Returns(_httpRequestMock.Object);
@@ -50,7 +56,7 @@ namespace Library.Tests.WebApiTests
                 RouteData = new RouteData()
             };
 
-            _filter = new AuthorizationFilter();
+            _filter = new AuthorizationFilter(_accessTokenStoreMock.Object);
         }
 
         [TestMethod]
@@ -78,7 +84,7 @@ namespace Library.Tests.WebApiTests
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_UnauthorizedReturned()
+        public async Task OnAuthorizationAsync_NoAuthorizationHeader_UnauthorizedReturned()
         {
             var context = GetAuthorizationFilterContext();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Library.Helpers.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Library
 {
@@ -6,6 +7,7 @@ namespace Library
     {
         public static void Register(IServiceCollection services)
         {
+            services.AddSingleton<IAccessTokenStore, AccessTokenStore>();
         }
     }
 }
