@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -17,6 +18,9 @@ namespace Library.Tests.WebApiTests
     [TestClass]
     public class AuthorizationFilterTests
     {
+        private const string HEADER_KEY = "Authorization";
+        private const string HEADER_VALUE_PREFIX = "Bearer ";
+
         private Mock<MethodInfo> _actionInfoMock;
         private Mock<TypeInfo> _controllerInfoMock;
 
@@ -91,6 +95,54 @@ namespace Library.Tests.WebApiTests
             await _filter.OnAuthorizationAsync(context);
 
             Assert.IsInstanceOfType(context.Result, typeof(UnauthorizedResult));
+        }
+
+        [TestMethod]
+        public async Task OnAuthorizationAsync_InvalidHeaderValue_UnauthorizedReturned()
+        {
+            var invalidHeaderValue = "a";
+            var context = GetAuthorizationFilterContext();
+
+            _httpHeadersMock.Setup(x => x.ContainsKey(HEADER_KEY)).Returns(true);
+            _httpHeadersMock.Setup(x => x[HEADER_KEY]).Returns(new StringValues(invalidHeaderValue));
+
+            await _filter.OnAuthorizationAsync(context);
+
+            Assert.IsInstanceOfType(context.Result, typeof(UnauthorizedResult));
+
+            _accessTokenStoreMock.Verify(x => x.IsValidAccessTokenAsync(null), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task OnAuthorizationAsync_InvalidAccessToken_UnauthorizedReturned()
+        {
+            var token = "a";
+            var context = GetAuthorizationFilterContext();
+
+            _httpHeadersMock.Setup(x => x.ContainsKey(HEADER_KEY)).Returns(true);
+            _httpHeadersMock.Setup(x => x[HEADER_KEY]).Returns(new StringValues(HEADER_VALUE_PREFIX + token));
+
+            await _filter.OnAuthorizationAsync(context);
+
+            Assert.IsInstanceOfType(context.Result, typeof(UnauthorizedResult));
+
+            _accessTokenStoreMock.Verify(x => x.IsValidAccessTokenAsync(token), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task OnAuthorizationAsync_ValidAccessToken_ContextResultNull()
+        {
+            var token = "a";
+            var context = GetAuthorizationFilterContext();
+
+            _httpHeadersMock.Setup(x => x.ContainsKey(HEADER_KEY)).Returns(true);
+            _httpHeadersMock.Setup(x => x[HEADER_KEY]).Returns(new StringValues(HEADER_VALUE_PREFIX + token));
+
+            _accessTokenStoreMock.Setup(x => x.IsValidAccessTokenAsync(token)).Returns(Task.FromResult(true));
+
+            await _filter.OnAuthorizationAsync(context);
+            
+            Assert.IsNull(context.Result);
         }
 
         private AuthorizationFilterContext GetAuthorizationFilterContext()
