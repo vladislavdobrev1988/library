@@ -7,3 +7,5 @@
 /Library/obj
 /Library.Objects/bin
 /Library.Objects/obj
+/Library.Tests/bin
+/Library.Tests/obj
