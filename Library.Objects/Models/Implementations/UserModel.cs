@@ -32,7 +32,7 @@ namespace Library.Objects.Models.Implementations
             var duplicate = await _repository.GetByEmail(user.Email);
             if (duplicate != null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest, ErrorMessage.EMAIL_EXISTS);
+                throw new HttpResponseException(HttpStatusCode.Conflict, ErrorMessage.EMAIL_EXISTS);
             }
 
             var entity = MapToEntity(user);
