@@ -34,13 +34,7 @@ namespace Library
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetService<LibraryContext>();
-
-                context.Database.EnsureCreated();
-            }
-            
+            SetupDatabase(app);
             app.UseMvc();
         }
 
@@ -48,6 +42,16 @@ namespace Library
         {
             options.Filters.Add<AuthorizationFilter>();
             options.Filters.Add<HttpResponseExceptionFilter>();
+        }
+
+        private void SetupDatabase(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<LibraryContext>();
+
+                context.Database.EnsureCreated();
+            }
         }
     }
 }

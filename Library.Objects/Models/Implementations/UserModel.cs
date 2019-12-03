@@ -16,7 +16,7 @@ namespace Library.Objects.Models.Implementations
 
         private static class ErrorMessage
         {
-            public const string EMAIL_EXISTS = "User with this email already exists";
+            public const string EMAIL_EXISTS = "User with the same email already exists";
         }
 
         public UserModel(IUserRepository repository, IPasswordHasher<User> passwordHasher)
