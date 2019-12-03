@@ -12,6 +12,7 @@ namespace Library
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(x => { })
                 .UseStartup<Startup>();
     }
 }
