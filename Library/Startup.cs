@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Library
 {
@@ -22,7 +23,7 @@ namespace Library
             services
                 .AddMvcCore()
                 .AddJsonFormatters()
-                .AddMvcOptions(options => options.Filters.Add<AuthorizationFilter>());
+                .AddMvcOptions(AddMvcOptions);
 
             var connectionString = _configuration.GetConnectionString("Library");
 
@@ -41,6 +42,12 @@ namespace Library
             }
             
             app.UseMvc();
+        }
+
+        private void AddMvcOptions(MvcOptions options)
+        {
+            options.Filters.Add<AuthorizationFilter>();
+            options.Filters.Add<HttpResponseExceptionFilter>();
         }
     }
 }
