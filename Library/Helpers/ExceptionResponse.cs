@@ -2,6 +2,11 @@
 {
     public class ExceptionResponse
     {
-        public string Message { get; set; }
+        public string Message { get; }
+
+        public ExceptionResponse(string message)
+        {
+            Message = message;
+        }
     }
 }
