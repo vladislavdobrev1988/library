@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Library.Filters;
 using Library.Objects.Context;
+using Library.OnStartup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -41,24 +42,14 @@ namespace Library
 
         public void Configure(IApplicationBuilder app)
         {
-            SetupDatabase(app);
             app.UseMvc();
+            Database.Setup(app);
         }
 
         private void AddMvcOptions(MvcOptions options)
         {
             options.Filters.Add<AuthorizationFilter>();
             options.Filters.Add<ExceptionFilter>();
-        }
-
-        private void SetupDatabase(IApplicationBuilder app)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetService<LibraryContext>();
-
-                context.Database.EnsureCreated();
-            }
         }
     }
 }
