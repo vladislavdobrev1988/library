@@ -1,33 +1,53 @@
-﻿using Library.Helpers;
+﻿using System.Net;
+using System.Threading.Tasks;
+using Library.Helpers;
 using Library.Objects.Exceptions;
+using Library.Objects.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Library.Filters
 {
-    public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
+    public class HttpResponseExceptionFilter : IAsyncExceptionFilter
     {
-        public int Order => int.MaxValue;
+        private readonly IExceptionLogger _exceptionLogger;
 
-        public void OnActionExecuting(ActionExecutingContext context) { }
+        private const string INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        public HttpResponseExceptionFilter(IExceptionLogger exceptionLogger)
         {
-            var ex = context.Exception as HttpResponseException;
-            if (ex != null)
+            _exceptionLogger = exceptionLogger;
+        }
+
+        public async Task OnExceptionAsync(ExceptionContext context)
+        {
+            string message;
+            HttpStatusCode statusCode;
+
+            if (context.Exception is HttpResponseException ex)
             {
-                var response = new ExceptionResponse
-                {
-                    Message = ex.Message
-                };
-
-                context.Result = new ObjectResult(response)
-                {
-                    StatusCode = (int)ex.StatusCode
-                };
-
-                context.ExceptionHandled = true;
+                message = ex.Message;
+                statusCode = ex.StatusCode;
             }
+            else
+            {
+                message = INTERNAL_SERVER_ERROR_MESSAGE;
+                statusCode = HttpStatusCode.InternalServerError;
+            }
+
+            var response = new ExceptionResponse
+            {
+                Message = message
+            };
+
+            context.Result = new ObjectResult(response)
+            {
+                StatusCode = (int)statusCode
+            };
+
+            context.ExceptionHandled = true;
+
+            await _exceptionLogger.LogAsync(context.Exception);
         }
     }
 }

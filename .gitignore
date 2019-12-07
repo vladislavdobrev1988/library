@@ -5,6 +5,7 @@
 /.vs
 /Library/bin
 /Library/obj
+/Library/Logs
 /Library.Objects/bin
 /Library.Objects/obj
 /Library.Tests/bin
