@@ -12,7 +12,7 @@ namespace Library.Filters
     {
         private readonly IExceptionLogger _exceptionLogger;
 
-        private const string INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
+        public const string INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
 
         public ExceptionFilter(IExceptionLogger exceptionLogger)
         {
