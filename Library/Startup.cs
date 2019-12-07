@@ -33,8 +33,10 @@ namespace Library
                 .AddMvcOptions(AddMvcOptions);
 
             services.AddDbContext<LibraryContext>(options => options.UseSqlServer(ConnectionString));
-            
-            ApplicationServices.Register(services, Path.Combine(_hostingEnvironment.ContentRootPath, LoggingFolder));
+
+            var logFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, LoggingFolder);
+
+            ApplicationServices.Register(services, logFilePath);
         }
 
         public void Configure(IApplicationBuilder app)
@@ -46,7 +48,7 @@ namespace Library
         private void AddMvcOptions(MvcOptions options)
         {
             options.Filters.Add<AuthorizationFilter>();
-            options.Filters.Add<HttpResponseExceptionFilter>();
+            options.Filters.Add<ExceptionFilter>();
         }
 
         private void SetupDatabase(IApplicationBuilder app)

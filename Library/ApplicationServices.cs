@@ -16,8 +16,7 @@ namespace Library
     {
         public static void Register(IServiceCollection services, string logFilePath)
         {
-            services.AddSingleton<ITextAppender, FileTextAppender>(x => new FileTextAppender(logFilePath, GetLogFileName));
-            services.AddSingleton<IExceptionLogger, ExceptionLogger>();
+            services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath, GetLogFileName));
             services.AddSingleton<IAccessTokenStore, AccessTokenStore>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             
@@ -27,8 +26,8 @@ namespace Library
 
         private static string GetLogFileName()
         {
-            var date = DateTime.UtcNow.ToString("yyyy-dd");
-            return string.Concat(date, ".txt");
+            var name = DateTime.UtcNow.ToString("yyyy-dd");
+            return string.Concat(name, ".txt");
         }
     }
 }

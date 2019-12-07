@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Library.Filters
 {
-    public class HttpResponseExceptionFilter : IAsyncExceptionFilter
+    public class ExceptionFilter : IAsyncExceptionFilter
     {
         private readonly IExceptionLogger _exceptionLogger;
 
         private const string INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
 
-        public HttpResponseExceptionFilter(IExceptionLogger exceptionLogger)
+        public ExceptionFilter(IExceptionLogger exceptionLogger)
         {
             _exceptionLogger = exceptionLogger;
         }
