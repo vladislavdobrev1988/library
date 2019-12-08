@@ -14,7 +14,7 @@ namespace Library.Objects.Models.Implementations
         private readonly IUserRepository _repository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string USER_REQUIRED = "User is required";
             public const string FIRST_NAME_REQUIRED = "First name is required";
