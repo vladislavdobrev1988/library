@@ -1,16 +1,17 @@
-﻿using Library.Objects.Entities;
+﻿using System.Net;
+using System.Threading.Tasks;
+using Library.Objects.Entities;
 using Library.Objects.Exceptions;
+using Library.Objects.Models.Base;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
 using Library.Objects.Validation;
 using Microsoft.AspNetCore.Identity;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Library.Objects.Models.Implementations
 {
-    public class UserModel : IUserModel
+    public class UserModel : BaseModel, IUserModel
     {
         private readonly IUserRepository _repository;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -18,6 +19,8 @@ namespace Library.Objects.Models.Implementations
         private static class ErrorMessage
         {
             public const string USER_REQUIRED = "User is required";
+            public const string FIRST_NAME_REQUIRED = "First name is required";
+            public const string LAST_NAME_REQUIRED = "Last name is required";
             public const string EMAIL_EXISTS = "User with the same email already exists";
         }
 
@@ -59,13 +62,29 @@ namespace Library.Objects.Models.Implementations
         {
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest, ErrorMessage.USER_REQUIRED);
+                ThrowHttpBadRequest(ErrorMessage.USER_REQUIRED);
+            }
+
+            var emailError = Email.Validate(user.Email);
+            if (emailError != null)
+            {
+                ThrowHttpBadRequest(emailError);
             }
 
             var passwordError = Password.Validate(user.Password);
             if (passwordError != null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest, passwordError);
+                ThrowHttpBadRequest(passwordError);
+            }
+
+            if (string.IsNullOrWhiteSpace(user.FirstName))
+            {
+                ThrowHttpBadRequest(ErrorMessage.FIRST_NAME_REQUIRED);
+            }
+
+            if (string.IsNullOrWhiteSpace(user.LastName))
+            {
+                ThrowHttpBadRequest(ErrorMessage.LAST_NAME_REQUIRED);
             }
         }
     }
