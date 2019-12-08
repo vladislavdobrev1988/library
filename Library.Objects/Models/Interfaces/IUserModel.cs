@@ -5,6 +5,6 @@ namespace Library.Objects.Models.Interfaces
 {
     public interface IUserModel
     {
-        Task SaveAsync(UserProxy user);
+        Task CreateAsync(UserProxy user);
     }
 }

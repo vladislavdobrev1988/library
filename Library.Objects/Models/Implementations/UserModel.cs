@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Library.Objects.Entities;
-using Library.Objects.Exceptions;
 using Library.Objects.Models.Base;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
@@ -30,14 +28,14 @@ namespace Library.Objects.Models.Implementations
             _passwordHasher = passwordHasher;
         }
 
-        public async Task SaveAsync(UserProxy user)
+        public async Task CreateAsync(UserProxy user)
         {
             ValidateUser(user);
 
             var existing = await _repository.GetByEmail(user.Email);
             if (existing != null)
             {
-                throw new HttpResponseException(HttpStatusCode.Conflict, ErrorMessage.EMAIL_EXISTS);
+                ThrowHttpConflict(ErrorMessage.EMAIL_EXISTS);
             }
 
             var entity = MapToEntity(user);
