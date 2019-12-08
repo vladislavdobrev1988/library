@@ -6,7 +6,7 @@ namespace Library.Objects.Validation
     {
         private static readonly EmailAddressAttribute _validator;
 
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string REQUIRED = "Email is required";
             public const string INVALID_EMAIL_FORMAT = "\"{0}\" is invalid email address";
