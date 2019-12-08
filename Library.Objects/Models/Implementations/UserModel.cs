@@ -3,6 +3,7 @@ using Library.Objects.Exceptions;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
+using Library.Objects.Validation;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace Library.Objects.Models.Implementations
 
         private static class ErrorMessage
         {
+            public const string USER_REQUIRED = "User is required";
             public const string EMAIL_EXISTS = "User with the same email already exists";
         }
 
@@ -27,10 +29,10 @@ namespace Library.Objects.Models.Implementations
 
         public async Task SaveAsync(UserProxy user)
         {
-            // validate
+            ValidateUser(user);
 
-            var duplicate = await _repository.GetByEmail(user.Email);
-            if (duplicate != null)
+            var existing = await _repository.GetByEmail(user.Email);
+            if (existing != null)
             {
                 throw new HttpResponseException(HttpStatusCode.Conflict, ErrorMessage.EMAIL_EXISTS);
             }
@@ -51,6 +53,20 @@ namespace Library.Objects.Models.Implementations
                 LastName = user.LastName,
                 PasswordHash = _passwordHasher.HashPassword(null, user.Password)
             };
+        }
+
+        private void ValidateUser(UserProxy user)
+        {
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, ErrorMessage.USER_REQUIRED);
+            }
+
+            var passwordError = Password.Validate(user.Password);
+            if (passwordError != null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, passwordError);
+            }
         }
     }
 }
