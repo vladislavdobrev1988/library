@@ -12,53 +12,53 @@ namespace Library.Objects.Validation
 
         private const string ALLOWED_SPECIAL_CHARACTERS = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
-            public const string REQUIRED = "Password is required";
-            public const string MIN_CHARACTER_COUNT_FORMAT = "Password must be at least {0} characters";
-            public const string VALID_CHARACTERS_FORMAT = "Valid password characters are ONLY latin letters, digits or any of the following special characters: {0}";
+            public static string Required => "Password is required";
+            public static string MinCharacterCount => string.Format("Password must be at least {0} characters", MIN_CHARACTER_COUNT);
+            public static string ValidCharacters => string.Format("Valid password characters are ONLY latin letters, digits or any of the following special characters: {0}", ALLOWED_SPECIAL_CHARACTERS);
 
-            public const string MIN_LOWER_LETTER_COUNT_FORMAT = "Password must contain at least {0} lower latin letters";
-            public const string MIN_UPPER_LETTER_COUNT_FORMAT = "Password must contain at least {0} upper latin letters";
-            public const string MIN_DIGIT_COUNT_FORMAT = "Password must contain at least {0} digits";
-            public const string MIN_SPECIAL_CHARACTER_COUNT_FORMAT = "Password must contain at least {0} of the following special characters: {1}";
+            public static string MinLowerLetterCount => string.Format("Password must contain at least {0} lower latin letters", MIN_LOWER_LETTER_COUNT);
+            public static string MinUpperLetterCount => string.Format("Password must contain at least {0} upper latin letters", MIN_UPPER_LETTER_COUNT);
+            public static string MinDigitCount => string.Format("Password must contain at least {0} digits", MIN_DIGIT_COUNT);
+            public static string MinSpecialCharacterCount => string.Format("Password must contain at least {0} of the following special characters: {1}", MIN_SPECIAL_CHARACTER_COUNT, ALLOWED_SPECIAL_CHARACTERS);
         }
 
         public static string Validate(string password)
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                return ErrorMessage.REQUIRED;
+                return ErrorMessage.Required;
             }
 
             if (password.Length < MIN_CHARACTER_COUNT)
             {
-                return string.Format(ErrorMessage.MIN_CHARACTER_COUNT_FORMAT, MIN_CHARACTER_COUNT);
+                return ErrorMessage.MinCharacterCount;
             }
 
             if (password.Any(ch => !IsVadlidCharacter(ch)))
             {
-                return string.Format(ErrorMessage.VALID_CHARACTERS_FORMAT, ALLOWED_SPECIAL_CHARACTERS);
+                return ErrorMessage.ValidCharacters;
             }
 
             if (password.Count(IsLowerLatinLetter) < MIN_LOWER_LETTER_COUNT)
             {
-                return string.Format(ErrorMessage.MIN_LOWER_LETTER_COUNT_FORMAT, MIN_LOWER_LETTER_COUNT);
+                return ErrorMessage.MinLowerLetterCount;
             }
 
             if (password.Count(IsUpperLatinLetter) < MIN_UPPER_LETTER_COUNT)
             {
-                return string.Format(ErrorMessage.MIN_UPPER_LETTER_COUNT_FORMAT, MIN_UPPER_LETTER_COUNT);
+                return ErrorMessage.MinUpperLetterCount;
             }
 
             if (password.Count(char.IsDigit) < MIN_DIGIT_COUNT)
             {
-                return string.Format(ErrorMessage.MIN_DIGIT_COUNT_FORMAT, MIN_DIGIT_COUNT);
+                return ErrorMessage.MinDigitCount;
             }
 
             if (password.Count(ch => ALLOWED_SPECIAL_CHARACTERS.Contains(ch)) < MIN_SPECIAL_CHARACTER_COUNT)
             {
-                return string.Format(ErrorMessage.MIN_SPECIAL_CHARACTER_COUNT_FORMAT, MIN_SPECIAL_CHARACTER_COUNT, ALLOWED_SPECIAL_CHARACTERS);
+                return ErrorMessage.MinSpecialCharacterCount;
             }
 
             return null;
