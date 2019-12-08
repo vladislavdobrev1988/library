@@ -15,7 +15,7 @@ namespace Library.OnStartup
     {
         public static void Register(IServiceCollection services, string logFilePath)
         {
-            services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath, Logging.GetLogFileName));
+            services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath));
             services.AddSingleton<IAccessTokenStore, AccessTokenStore>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             

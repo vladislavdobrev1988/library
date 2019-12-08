@@ -8,14 +8,13 @@ namespace Library.Objects.Services.Implementations
     public class ExceptionLogger : IExceptionLogger
     {
         private readonly string _path;
-        private readonly Func<string> _getFileName;
 
+        private const string FILENAME_FORMAT = "{0:yyyy-MM}.txt";
         private const string TIMESTAMP_FORMAT = "u";
 
-        public ExceptionLogger(string path, Func<string> getFileName)
+        public ExceptionLogger(string path)
         {
             _path = path;
-            _getFileName = getFileName;
 
             Directory.CreateDirectory(_path);
         }
@@ -27,7 +26,7 @@ namespace Library.Objects.Services.Implementations
                 throw new ArgumentNullException(nameof(exception));
             }
 
-            var path = Path.Combine(_path, _getFileName());
+            var path = Path.Combine(_path, GetFilename());
             var text = CreateLogEntry(exception);
 
             await File.AppendAllTextAsync(path, text);
@@ -36,6 +35,11 @@ namespace Library.Objects.Services.Implementations
         private string CreateLogEntry(Exception exception)
         {
             return string.Join(Environment.NewLine, DateTime.UtcNow.ToString(TIMESTAMP_FORMAT), exception.ToString(), Environment.NewLine);
+        }
+
+        public string GetFilename()
+        {
+            return string.Format(FILENAME_FORMAT, DateTime.UtcNow);
         }
     }
 }
