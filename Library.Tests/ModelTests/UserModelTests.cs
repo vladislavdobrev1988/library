@@ -25,7 +25,7 @@ namespace Library.Tests.ModelTests
         [TestInitialize]
         public void Init()
         {
-            _repositoryMock = new Mock<IUserRepository>(/*MockBehavior.Strict*/);
+            _repositoryMock = new Mock<IUserRepository>();
             _passwordHasherMock = new Mock<IPasswordHasher<User>>();
 
             _model = new UserModel(_repositoryMock.Object, _passwordHasherMock.Object);
