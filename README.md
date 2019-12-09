@@ -7,4 +7,4 @@
 - usage of proper exception messages and HTTP status codes
 
 ### Disclaimer
-Some approaches in the project are adopted for the sake of simplicity. They are subject of change for production systems
+Some approaches in the project are adopted for the sake of simplicity. They are subject of change for production systems.
