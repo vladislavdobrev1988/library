@@ -4,7 +4,7 @@
 - task asynchronous programming (with ```async``` and ```await```)
 - unit testing
 - code segregation into separate layers
-- usage of proper exception messages and HTTP status codes.
+- usage of proper exception messages and HTTP status codes
 
 ### Disclaimer
 Some approaches in the project are adopted for the sake of simplicity. They are subject of change for production systems
