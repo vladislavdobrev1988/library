@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using Library.Filters;
@@ -159,7 +158,7 @@ namespace Library.Tests.WebApiTests
             var messageResponse = objectResult.Value as MessageResponse;
 
             Assert.AreEqual(AuthorizationFilter.UNAUTHORIZED_MESSAGE, messageResponse.Message);
-            Assert.AreEqual((int)HttpStatusCode.Unauthorized, objectResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.UNAUTHORIZED, objectResult.StatusCode);
         }
 
         private static string GetHeaderValue(string token)

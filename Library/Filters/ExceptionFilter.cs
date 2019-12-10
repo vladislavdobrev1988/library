@@ -1,7 +1,7 @@
-﻿using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Library.Helpers;
 using Library.Objects.Exceptions;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,7 +22,7 @@ namespace Library.Filters
         public async Task OnExceptionAsync(ExceptionContext context)
         {
             string message;
-            HttpStatusCode statusCode;
+            int statusCode;
 
             if (context.Exception is HttpResponseException ex)
             {
@@ -32,12 +32,12 @@ namespace Library.Filters
             else
             {
                 message = INTERNAL_SERVER_ERROR_MESSAGE;
-                statusCode = HttpStatusCode.InternalServerError;
+                statusCode = HttpStatusCode.INTERNAL_SERVER_ERROR;
             }
 
             context.Result = new ObjectResult(new MessageResponse(message))
             {
-                StatusCode = (int)statusCode
+                StatusCode = statusCode
             };
 
             context.ExceptionHandled = true;

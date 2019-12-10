@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Library.Objects.Exceptions;
+﻿using Library.Objects.Exceptions;
+using Library.Objects.Helpers.Constants;
 
 namespace Library.Objects.Models.Base
 {
@@ -7,12 +7,12 @@ namespace Library.Objects.Models.Base
     {
         protected static void ThrowHttpConflict(string message)
         {
-            throw new HttpResponseException(HttpStatusCode.Conflict, message);
+            throw new HttpResponseException(HttpStatusCode.CONFLICT, message);
         }
 
         protected static void ThrowHttpBadRequest(string message)
         {
-            throw new HttpResponseException(HttpStatusCode.BadRequest, message);
+            throw new HttpResponseException(HttpStatusCode.BAD_REQUEST, message);
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Net;
 
 namespace Library.Objects.Exceptions
 {
     public class HttpResponseException : Exception
     {
-        public HttpStatusCode StatusCode { get; }
+        public int StatusCode { get; }
 
-        public HttpResponseException(HttpStatusCode statusCode, string message) : base(message)
+        public HttpResponseException(int statusCode, string message) : base(message)
         {
             StatusCode = statusCode;
         }

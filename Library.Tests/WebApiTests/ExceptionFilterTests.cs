@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Library.Filters;
 using Library.Helpers;
 using Library.Objects.Exceptions;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +33,7 @@ namespace Library.Tests.WebApiTests
         [TestMethod]
         public async Task OnExceptionAsync_HttpResponseException_ReturnsExpectedResult()
         {
-            var exception = new HttpResponseException(HttpStatusCode.NotFound, "some");
+            var exception = new HttpResponseException(HttpStatusCode.NOT_FOUND, "some");
 
             var context = GetExceptionContext(exception);
 
@@ -47,7 +47,7 @@ namespace Library.Tests.WebApiTests
 
             Assert.AreEqual(exception.Message, exceptionResponse.Message);
 
-            Assert.AreEqual((int)exception.StatusCode, objectResult.StatusCode);
+            Assert.AreEqual(exception.StatusCode, objectResult.StatusCode);
 
             Assert.IsTrue(context.ExceptionHandled);
 
@@ -71,7 +71,7 @@ namespace Library.Tests.WebApiTests
 
             Assert.AreEqual(ExceptionFilter.INTERNAL_SERVER_ERROR_MESSAGE, exceptionResponse.Message);
 
-            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+            Assert.AreEqual(HttpStatusCode.INTERNAL_SERVER_ERROR, objectResult.StatusCode);
 
             Assert.IsTrue(context.ExceptionHandled);
 

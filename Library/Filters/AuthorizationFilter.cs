@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Library.Helpers;
 using Library.Helpers.Authorization;
@@ -40,7 +39,7 @@ namespace Library.Filters
             {
                 context.Result = new ObjectResult(new MessageResponse(UNAUTHORIZED_MESSAGE))
                 {
-                    StatusCode = (int)HttpStatusCode.Unauthorized
+                    StatusCode = HttpStatusCode.UNAUTHORIZED
                 };
             }
         }

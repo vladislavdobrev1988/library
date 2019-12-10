@@ -1,5 +1,5 @@
-﻿using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +25,7 @@ namespace Library.Controllers
         {
             await _userModel.CreateAsync(user);
 
-            return StatusCode((int)HttpStatusCode.Created);
+            return StatusCode(HttpStatusCode.CREATED);
         }
     }
 }
