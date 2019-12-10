@@ -1,10 +1,10 @@
 ﻿namespace Library.Helpers
 {
-    public class ExceptionResponse
+    public class MessageResponse
     {
         public string Message { get; }
 
-        public ExceptionResponse(string message)
+        public MessageResponse(string message)
         {
             Message = message;
         }

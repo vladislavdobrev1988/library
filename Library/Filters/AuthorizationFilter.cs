@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Library.Helpers;
 using Library.Helpers.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,8 @@ namespace Library.Filters
     {
         private const string HEADER_KEY = "Authorization";
         private const string HEADER_VALUE_PREFIX = "Bearer ";
+
+        public const string UNAUTHORIZED_MESSAGE = "Missing or invalid access token";
 
         private readonly IAccessTokenStore _accessTokenStore;
 
@@ -33,7 +37,10 @@ namespace Library.Filters
             var isValidAccessToken = await _accessTokenStore.IsValidAccessTokenAsync(token);
             if (!isValidAccessToken)
             {
-                context.Result = new UnauthorizedResult();
+                context.Result = new ObjectResult(new MessageResponse(UNAUTHORIZED_MESSAGE))
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
             }
         }
 

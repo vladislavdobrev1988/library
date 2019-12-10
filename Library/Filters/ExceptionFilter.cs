@@ -35,9 +35,7 @@ namespace Library.Filters
                 statusCode = HttpStatusCode.InternalServerError;
             }
 
-            var response = new ExceptionResponse(message);
-
-            context.Result = new ObjectResult(response)
+            context.Result = new ObjectResult(new MessageResponse(message))
             {
                 StatusCode = (int)statusCode
             };

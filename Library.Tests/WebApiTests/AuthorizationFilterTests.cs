@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using Library.Filters;
+using Library.Helpers;
 using Library.Helpers.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -94,7 +96,7 @@ namespace Library.Tests.WebApiTests
 
             await _filter.OnAuthorizationAsync(context);
 
-            Assert.IsInstanceOfType(context.Result, typeof(UnauthorizedResult));
+            AssertUnauthorizedResult(context.Result);
         }
 
         [TestMethod]
@@ -108,7 +110,7 @@ namespace Library.Tests.WebApiTests
 
             await _filter.OnAuthorizationAsync(context);
 
-            Assert.IsInstanceOfType(context.Result, typeof(UnauthorizedResult));
+            AssertUnauthorizedResult(context.Result);
 
             _accessTokenStoreMock.Verify(x => x.IsValidAccessTokenAsync(null), Times.Once);
         }
@@ -124,7 +126,7 @@ namespace Library.Tests.WebApiTests
 
             await _filter.OnAuthorizationAsync(context);
 
-            Assert.IsInstanceOfType(context.Result, typeof(UnauthorizedResult));
+            AssertUnauthorizedResult(context.Result);
 
             _accessTokenStoreMock.Verify(x => x.IsValidAccessTokenAsync(token), Times.Once);
         }
@@ -148,6 +150,20 @@ namespace Library.Tests.WebApiTests
         private AuthorizationFilterContext GetAuthorizationFilterContext()
         {
             return new AuthorizationFilterContext(_actionContext, new List<IFilterMetadata>(0));
+        }
+
+        private void AssertUnauthorizedResult(IActionResult result)
+        {
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+
+            var objectResult = result as ObjectResult;
+
+            Assert.IsInstanceOfType(objectResult.Value, typeof(MessageResponse));
+
+            var messageResponse = objectResult.Value as MessageResponse;
+
+            Assert.AreEqual(AuthorizationFilter.UNAUTHORIZED_MESSAGE, messageResponse.Message);
+            Assert.AreEqual((int)HttpStatusCode.Unauthorized, objectResult.StatusCode);
         }
     }
 }
