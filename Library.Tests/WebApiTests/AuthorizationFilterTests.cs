@@ -153,11 +153,9 @@ namespace Library.Tests.WebApiTests
         private void AssertUnauthorizedResult(IActionResult result)
         {
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
-
             var objectResult = result as ObjectResult;
 
             Assert.IsInstanceOfType(objectResult.Value, typeof(MessageResponse));
-
             var messageResponse = objectResult.Value as MessageResponse;
 
             Assert.AreEqual(AuthorizationFilter.UNAUTHORIZED_MESSAGE, messageResponse.Message);

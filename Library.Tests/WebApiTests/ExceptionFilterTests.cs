@@ -39,11 +39,11 @@ namespace Library.Tests.WebApiTests
 
             await _filter.OnExceptionAsync(context);
 
+            Assert.IsInstanceOfType(context.Result, typeof(ObjectResult));
             var objectResult = context.Result as ObjectResult;
-            Assert.IsNotNull(objectResult);
 
+            Assert.IsInstanceOfType(objectResult.Value, typeof(MessageResponse));
             var exceptionResponse = objectResult.Value as MessageResponse;
-            Assert.IsNotNull(exceptionResponse);
 
             Assert.AreEqual(exception.Message, exceptionResponse.Message);
 
@@ -63,11 +63,11 @@ namespace Library.Tests.WebApiTests
 
             await _filter.OnExceptionAsync(context);
 
+            Assert.IsInstanceOfType(context.Result, typeof(ObjectResult));
             var objectResult = context.Result as ObjectResult;
-            Assert.IsNotNull(objectResult);
 
+            Assert.IsInstanceOfType(objectResult.Value, typeof(MessageResponse));
             var exceptionResponse = objectResult.Value as MessageResponse;
-            Assert.IsNotNull(exceptionResponse);
 
             Assert.AreEqual(ExceptionFilter.INTERNAL_SERVER_ERROR_MESSAGE, exceptionResponse.Message);
 
