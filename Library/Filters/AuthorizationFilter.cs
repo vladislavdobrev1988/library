@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Library.Helpers;
 using Library.Helpers.Authorization;
+using Library.Objects.Helpers.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,12 @@ namespace Library.Filters
 {
     public class AuthorizationFilter : IAsyncAuthorizationFilter
     {
-        private const string HEADER_KEY = "Authorization";
-        private const string HEADER_VALUE_PREFIX = "Bearer ";
-
-        public const string UNAUTHORIZED_MESSAGE = "Missing or invalid access token";
+        private const string SPACE = " ";
+        private const string HEADER_VALUE_PREFIX = HttpAuthenticationScheme.BEARER + SPACE;
 
         private readonly IAccessTokenStore _accessTokenStore;
+
+        public const string UNAUTHORIZED_MESSAGE = "Missing or invalid access token";
 
         public AuthorizationFilter(IAccessTokenStore accessTokenStore)
         {
@@ -57,12 +58,12 @@ namespace Library.Filters
 
         private string GetAccessToken(IHeaderDictionary headers)
         {
-            if (!headers.ContainsKey(HEADER_KEY) || headers[HEADER_KEY].Count != 1)
+            if (!headers.ContainsKey(HttpHeader.AUTHORIZATION) || headers[HttpHeader.AUTHORIZATION].Count != 1)
             {
                 return null;
             }
 
-            var value = headers[HEADER_KEY].Single();
+            var value = headers[HttpHeader.AUTHORIZATION].Single();
 
             if (string.IsNullOrWhiteSpace(value) || !value.StartsWith(HEADER_VALUE_PREFIX))
             {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Library.Filters;
 using Library.Helpers;
 using Library.Helpers.Authorization;
+using Library.Objects.Helpers.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,6 @@ namespace Library.Tests.WebApiTests
     [TestClass]
     public class AuthorizationFilterTests
     {
-        private const string HEADER_KEY = "Authorization";
-        private const string HEADER_VALUE_PREFIX = "Bearer ";
-
         private Mock<MethodInfo> _actionInfoMock;
         private Mock<TypeInfo> _controllerInfoMock;
 
@@ -105,8 +103,8 @@ namespace Library.Tests.WebApiTests
             var invalidHeaderValue = "a";
             var context = GetAuthorizationFilterContext();
 
-            _httpHeadersMock.Setup(x => x.ContainsKey(HEADER_KEY)).Returns(true);
-            _httpHeadersMock.Setup(x => x[HEADER_KEY]).Returns(new StringValues(invalidHeaderValue));
+            _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
+            _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(invalidHeaderValue));
 
             await _filter.OnAuthorizationAsync(context);
 
@@ -121,8 +119,8 @@ namespace Library.Tests.WebApiTests
             var token = "a";
             var context = GetAuthorizationFilterContext();
 
-            _httpHeadersMock.Setup(x => x.ContainsKey(HEADER_KEY)).Returns(true);
-            _httpHeadersMock.Setup(x => x[HEADER_KEY]).Returns(new StringValues(HEADER_VALUE_PREFIX + token));
+            _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
+            _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(GetHeaderValue(token)));
 
             await _filter.OnAuthorizationAsync(context);
 
@@ -137,8 +135,8 @@ namespace Library.Tests.WebApiTests
             var token = "a";
             var context = GetAuthorizationFilterContext();
 
-            _httpHeadersMock.Setup(x => x.ContainsKey(HEADER_KEY)).Returns(true);
-            _httpHeadersMock.Setup(x => x[HEADER_KEY]).Returns(new StringValues(HEADER_VALUE_PREFIX + token));
+            _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
+            _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(GetHeaderValue(token)));
 
             _accessTokenStoreMock.Setup(x => x.IsValidAccessTokenAsync(token)).Returns(Task.FromResult(true));
 
@@ -164,6 +162,11 @@ namespace Library.Tests.WebApiTests
 
             Assert.AreEqual(AuthorizationFilter.UNAUTHORIZED_MESSAGE, messageResponse.Message);
             Assert.AreEqual((int)HttpStatusCode.Unauthorized, objectResult.StatusCode);
+        }
+
+        private static string GetHeaderValue(string token)
+        {
+            return string.Join(" ", HttpAuthenticationScheme.BEARER, token);
         }
     }
 }
