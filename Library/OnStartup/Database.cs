@@ -6,7 +6,7 @@ namespace Library.OnStartup
 {
     public static class Database
     {
-        public static void Setup(IApplicationBuilder app)
+        public static void Initialize(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {

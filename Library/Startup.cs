@@ -43,7 +43,7 @@ namespace Library
         public void Configure(IApplicationBuilder app)
         {
             app.UseMvc();
-            Database.Setup(app);
+            Database.Initialize(app);
         }
 
         private void AddMvcOptions(MvcOptions options)
