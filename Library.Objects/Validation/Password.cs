@@ -14,14 +14,14 @@ namespace Library.Objects.Validation
 
         public static class ErrorMessage
         {
-            public static string Required => "Password is required";
-            public static string MinCharacterCount => string.Format("Password must be at least {0} characters", MIN_CHARACTER_COUNT);
-            public static string ValidCharacters => string.Format("Valid password characters are ONLY latin letters, digits or any of the following special characters: {0}", ALLOWED_SPECIAL_CHARACTERS);
+            public readonly static string Required = "Password is required";
+            public readonly static string MinCharacterCount = string.Format("Password must be at least {0} characters", MIN_CHARACTER_COUNT);
+            public readonly static string ValidCharacters = string.Format("Valid password characters are ONLY latin letters, digits or any of the following special characters: {0}", ALLOWED_SPECIAL_CHARACTERS);
 
-            public static string MinLowerLetterCount => string.Format("Password must contain at least {0} lower latin letters", MIN_LOWER_LETTER_COUNT);
-            public static string MinUpperLetterCount => string.Format("Password must contain at least {0} upper latin letters", MIN_UPPER_LETTER_COUNT);
-            public static string MinDigitCount => string.Format("Password must contain at least {0} digits", MIN_DIGIT_COUNT);
-            public static string MinSpecialCharacterCount => string.Format("Password must contain at least {0} of the following special characters: {1}", MIN_SPECIAL_CHARACTER_COUNT, ALLOWED_SPECIAL_CHARACTERS);
+            public readonly static string MinLowerLetterCount = string.Format("Password must contain at least {0} lower latin letters", MIN_LOWER_LETTER_COUNT);
+            public readonly static string MinUpperLetterCount = string.Format("Password must contain at least {0} upper latin letters", MIN_UPPER_LETTER_COUNT);
+            public readonly static string MinDigitCount = string.Format("Password must contain at least {0} digits", MIN_DIGIT_COUNT);
+            public readonly static string MinSpecialCharacterCount = string.Format("Password must contain at least {0} of the following special characters: {1}", MIN_SPECIAL_CHARACTER_COUNT, ALLOWED_SPECIAL_CHARACTERS);
         }
 
         public static string Validate(string password)
