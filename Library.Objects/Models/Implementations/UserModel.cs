@@ -28,7 +28,7 @@ namespace Library.Objects.Models.Implementations
             _passwordHasher = passwordHasher;
         }
 
-        public async Task CreateAsync(UserProxy user)
+        public async Task CreateUserAsync(UserProxy user)
         {
             ValidateUser(user);
 

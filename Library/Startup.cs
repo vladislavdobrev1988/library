@@ -18,7 +18,7 @@ namespace Library
 
         private string ConnectionString => _configuration.GetConnectionString("Library");
 
-        private string LoggingFolder => _configuration.GetValue<string>("LoggingFolder");
+        private string LogFolder => _configuration.GetValue<string>("LogFolder");
 
         public Startup(IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
@@ -35,7 +35,7 @@ namespace Library
 
             services.AddDbContext<LibraryContext>(options => options.UseSqlServer(ConnectionString));
 
-            var logFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, LoggingFolder);
+            var logFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, LogFolder);
 
             ApplicationServices.Register(services, logFilePath);
         }

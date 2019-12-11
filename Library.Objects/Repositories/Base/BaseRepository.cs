@@ -15,7 +15,7 @@ namespace Library.Objects.Repositories.Base
         public BaseRepository(LibraryContext context)
         {
             _context = context;
-            DbSet = context.Set<T>();
+            DbSet = _context.Set<T>();
         }
 
         public void Add(T entity)

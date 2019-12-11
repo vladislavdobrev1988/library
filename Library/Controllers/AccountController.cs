@@ -23,7 +23,7 @@ namespace Library.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignUp(UserProxy user)
         {
-            await _userModel.CreateAsync(user);
+            await _userModel.CreateUserAsync(user);
 
             return StatusCode(HttpStatusCode.CREATED);
         }
