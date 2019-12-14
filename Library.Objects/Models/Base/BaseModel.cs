@@ -14,5 +14,10 @@ namespace Library.Objects.Models.Base
         {
             throw new HttpResponseException(HttpStatusCode.BAD_REQUEST, message);
         }
+
+        protected static void ThrowHttpUnauthorized(string message)
+        {
+            throw new HttpResponseException(HttpStatusCode.UNAUTHORIZED, message);
+        }
     }
 }

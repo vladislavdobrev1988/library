@@ -45,6 +45,16 @@ namespace Library.Objects.Models.Implementations
             await _repository.SaveChangesAsync();
         }
 
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ThrowHttpBadRequest(Email.ErrorMessage.REQUIRED);
+            }
+
+            return await _repository.GetByEmail(email);
+        }
+
         private User MapToEntity(UserProxy user)
         {
             return new User
