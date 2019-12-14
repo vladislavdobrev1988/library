@@ -6,6 +6,6 @@ namespace Library.Objects.Models.Interfaces
 {
     public interface IAccessTokenModel
     {
-        Task<string> CreateAsync(User user);
+        Task<string> CreateAccessTokenAsync(User user);
     }
 }

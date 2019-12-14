@@ -22,9 +22,12 @@ namespace Library.Objects.Models.Implementations
             _configuration = configuration;
         }
 
-        public async Task<string> CreateAsync(User user)
+        public async Task<string> CreateAccessTokenAsync(User user)
         {
-            // validate
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
 
             var validity = _configuration.GetValue<double>(VALIDITY_KEY);
 

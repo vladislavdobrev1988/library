@@ -26,7 +26,10 @@ namespace Library.Objects.Services.Implementations
 
         public string CreateAccessToken(DateTime expires, IEnumerable<Claim> claims)
         {
-            // validate
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
 
             var descriptor = new SecurityTokenDescriptor
             {
