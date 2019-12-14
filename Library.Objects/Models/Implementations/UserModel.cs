@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Library.Objects.Entities;
-using Library.Objects.Models.Base;
+using Library.Objects.Helpers.Common;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Library.Objects.Models.Implementations
 {
-    public class UserModel : BaseModel, IUserModel
+    public class UserModel : IUserModel
     {
         private readonly IUserRepository _repository;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -35,7 +35,7 @@ namespace Library.Objects.Models.Implementations
             var existing = await _repository.GetByEmail(user.Email);
             if (existing != null)
             {
-                ThrowHttpConflict(ErrorMessage.EMAIL_EXISTS);
+                ThrowHttp.Conflict(ErrorMessage.EMAIL_EXISTS);
             }
 
             var entity = MapToEntity(user);
@@ -49,7 +49,7 @@ namespace Library.Objects.Models.Implementations
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                ThrowHttpBadRequest(Email.ErrorMessage.REQUIRED);
+                ThrowHttp.BadRequest(Email.ErrorMessage.REQUIRED);
             }
 
             return await _repository.GetByEmail(email);
@@ -70,29 +70,29 @@ namespace Library.Objects.Models.Implementations
         {
             if (user == null)
             {
-                ThrowHttpBadRequest(ErrorMessage.USER_REQUIRED);
+                ThrowHttp.BadRequest(ErrorMessage.USER_REQUIRED);
             }
 
             var emailError = Email.Validate(user.Email);
             if (emailError != null)
             {
-                ThrowHttpBadRequest(emailError);
+                ThrowHttp.BadRequest(emailError);
             }
 
             var passwordError = Password.Validate(user.Password);
             if (passwordError != null)
             {
-                ThrowHttpBadRequest(passwordError);
+                ThrowHttp.BadRequest(passwordError);
             }
 
             if (string.IsNullOrWhiteSpace(user.FirstName))
             {
-                ThrowHttpBadRequest(ErrorMessage.FIRST_NAME_REQUIRED);
+                ThrowHttp.BadRequest(ErrorMessage.FIRST_NAME_REQUIRED);
             }
 
             if (string.IsNullOrWhiteSpace(user.LastName))
             {
-                ThrowHttpBadRequest(ErrorMessage.LAST_NAME_REQUIRED);
+                ThrowHttp.BadRequest(ErrorMessage.LAST_NAME_REQUIRED);
             }
         }
     }

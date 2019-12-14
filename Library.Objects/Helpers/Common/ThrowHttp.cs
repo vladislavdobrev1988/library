@@ -1,21 +1,21 @@
 ﻿using Library.Objects.Exceptions;
 using Library.Objects.Helpers.Constants;
 
-namespace Library.Objects.Models.Base
+namespace Library.Objects.Helpers.Common
 {
-    public abstract class BaseModel
+    public static class ThrowHttp
     {
-        protected static void ThrowHttpConflict(string message)
+        public static void Conflict(string message)
         {
             throw new HttpResponseException(HttpStatusCode.CONFLICT, message);
         }
 
-        protected static void ThrowHttpBadRequest(string message)
+        public static void BadRequest(string message)
         {
             throw new HttpResponseException(HttpStatusCode.BAD_REQUEST, message);
         }
 
-        protected static void ThrowHttpUnauthorized(string message)
+        public static void Unauthorized(string message)
         {
             throw new HttpResponseException(HttpStatusCode.UNAUTHORIZED, message);
         }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Library.Objects.Entities;
+using Library.Objects.Helpers.Common;
 using Library.Objects.Helpers.Response;
-using Library.Objects.Models.Base;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Validation;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Library.Objects.Models.Implementations
 {
-    public class AccountModel : BaseModel, IAccountModel
+    public class AccountModel : IAccountModel
     {
         private readonly IUserModel _userModel;
         private readonly IAccessTokenModel _accessTokenModel;
@@ -35,7 +35,7 @@ namespace Library.Objects.Models.Implementations
             var user = await _userModel.GetByEmailAsync(credentials.Email);
             if (user == null || !HasPasswordMatch(user.PasswordHash, credentials.Password))
             {
-                ThrowHttpUnauthorized(ErrorMessage.CREDENTIAL_MISMATCH);
+                ThrowHttp.Unauthorized(ErrorMessage.CREDENTIAL_MISMATCH);
             }
 
             var token = await _accessTokenModel.CreateAsync(user);
@@ -47,17 +47,17 @@ namespace Library.Objects.Models.Implementations
         {
             if (credentials == null)
             {
-                ThrowHttpBadRequest(ErrorMessage.CREDENTIALS_REQUIRED);
+                ThrowHttp.BadRequest(ErrorMessage.CREDENTIALS_REQUIRED);
             }
 
             if (string.IsNullOrWhiteSpace(credentials.Email))
             {
-                ThrowHttpBadRequest(Email.ErrorMessage.REQUIRED);
+                ThrowHttp.BadRequest(Email.ErrorMessage.REQUIRED);
             }
 
             if (string.IsNullOrWhiteSpace(credentials.Password))
             {
-                ThrowHttpBadRequest(Password.ErrorMessage.Required);
+                ThrowHttp.BadRequest(Password.ErrorMessage.Required);
             }
         }
 
