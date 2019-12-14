@@ -1,5 +1,4 @@
-﻿using Library.Helpers.Authorization;
-using Library.Objects.Entities;
+﻿using Library.Objects.Entities;
 using Library.Objects.Models.Implementations;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Repositories.Implementations;
@@ -16,10 +15,10 @@ namespace Library.OnStartup
         public static void Register(IServiceCollection services, string logFilePath)
         {
             services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath));
-            services.AddSingleton<IAccessTokenStore, AccessTokenStore>();
             services.AddSingleton<IAccessTokenUtility, AccessTokenUtility>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             
+            services.AddScoped<IAccessTokenRepository, AccessTokenRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IAccountModel, AccountModel>();

@@ -3,8 +3,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Library.Filters;
 using Library.Helpers;
-using Library.Helpers.Authorization;
 using Library.Objects.Helpers.Constants;
+using Library.Objects.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,7 @@ namespace Library.Tests.WebApiTests
         private Mock<HttpRequest> _httpRequestMock;
         private Mock<IHeaderDictionary> _httpHeadersMock;
 
-        private Mock<IAccessTokenStore> _accessTokenStoreMock;
+        private Mock<IAccessTokenModel> _accessTokenModelMock;
 
         private ActionContext _actionContext;
 
@@ -43,7 +43,7 @@ namespace Library.Tests.WebApiTests
             _httpRequestMock = new Mock<HttpRequest>();
             _httpHeadersMock = new Mock<IHeaderDictionary>();
 
-            _accessTokenStoreMock = new Mock<IAccessTokenStore>();
+            _accessTokenModelMock = new Mock<IAccessTokenModel>();
 
             _httpRequestMock.Setup(x => x.Headers).Returns(_httpHeadersMock.Object);
             _httpContextMock.Setup(x => x.Request).Returns(_httpRequestMock.Object);
@@ -59,7 +59,7 @@ namespace Library.Tests.WebApiTests
                 RouteData = new RouteData()
             };
 
-            _filter = new AuthorizationFilter(_accessTokenStoreMock.Object);
+            _filter = new AuthorizationFilter(_accessTokenModelMock.Object);
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@ namespace Library.Tests.WebApiTests
 
             AssertUnauthorizedResult(context.Result);
 
-            _accessTokenStoreMock.Verify(x => x.IsValidAccessTokenAsync(null), Times.Once);
+            _accessTokenModelMock.Verify(x => x.IsValidAccessTokenAsync(null), Times.Once);
         }
 
         [TestMethod]
@@ -125,7 +125,7 @@ namespace Library.Tests.WebApiTests
 
             AssertUnauthorizedResult(context.Result);
 
-            _accessTokenStoreMock.Verify(x => x.IsValidAccessTokenAsync(token), Times.Once);
+            _accessTokenModelMock.Verify(x => x.IsValidAccessTokenAsync(token), Times.Once);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
             _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(GetHeaderValue(token)));
 
-            _accessTokenStoreMock.Setup(x => x.IsValidAccessTokenAsync(token)).Returns(Task.FromResult(true));
+            _accessTokenModelMock.Setup(x => x.IsValidAccessTokenAsync(token)).Returns(Task.FromResult(true));
 
             await _filter.OnAuthorizationAsync(context);
             

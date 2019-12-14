@@ -33,6 +33,7 @@ namespace Library.Objects.Models.Implementations
             ValidateCredentials(credentials);
 
             var user = await _userModel.GetByEmailAsync(credentials.Email);
+
             if (user == null || !HasPasswordMatch(user.PasswordHash, credentials.Password))
             {
                 ThrowHttp.Unauthorized(ErrorMessage.CREDENTIAL_MISMATCH);
