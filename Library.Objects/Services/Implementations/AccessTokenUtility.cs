@@ -11,7 +11,7 @@ namespace Library.Objects.Services.Implementations
 {
     public class AccessTokenUtility : IAccessTokenUtility
     {
-        private const string SECRET_KEY = "AccessTokenSecret";
+        private const string SECRET_KEY = "Security:AccessTokenSecret";
 
         private readonly IConfiguration _configuration;
         private readonly JwtSecurityTokenHandler _handler;

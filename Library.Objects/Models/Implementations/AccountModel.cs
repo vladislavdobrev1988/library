@@ -64,7 +64,9 @@ namespace Library.Objects.Models.Implementations
 
         private bool HasPasswordMatch(string hashedPassword, string password)
         {
-            return _passwordHasher.VerifyHashedPassword(null, hashedPassword, password) == PasswordVerificationResult.Success;
+            var result = _passwordHasher.VerifyHashedPassword(null, hashedPassword, password);
+
+            return result == PasswordVerificationResult.Success;
         }
     }
 }

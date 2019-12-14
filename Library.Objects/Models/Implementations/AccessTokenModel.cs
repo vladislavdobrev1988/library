@@ -12,7 +12,7 @@ namespace Library.Objects.Models.Implementations
 {
     public class AccessTokenModel : IAccessTokenModel
     {
-        private const string VALIDITY_KEY = "AccessTokenValidityInMinutes";
+        private const string VALIDITY_KEY = "Security:AccessTokenValidityInMinutes";
 
         private readonly IAccessTokenRepository _repository;
         private readonly IAccessTokenUtility _utility;
