@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace Library.Objects.Helpers.Response
 {
     public class MessageResponse
     {
