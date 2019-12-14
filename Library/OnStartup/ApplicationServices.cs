@@ -17,9 +17,12 @@ namespace Library.OnStartup
         {
             services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath));
             services.AddSingleton<IAccessTokenStore, AccessTokenStore>();
+            services.AddSingleton<IAccessTokenUtility, AccessTokenUtility>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             
             services.AddScoped<IUserRepository, UserRepository>();
+            
+            services.AddScoped<IAccountModel, AccountModel>();
             services.AddScoped<IUserModel, UserModel>();
         }
     }

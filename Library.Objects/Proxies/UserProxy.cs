@@ -1,10 +1,8 @@
 ﻿namespace Library.Objects.Proxies
 {
-    public class UserProxy
+    public class UserProxy : CredentialProxy
     {
-        public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Password { get; set; }
     }
 }
