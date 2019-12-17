@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Library.Objects.Helpers.Constants;
 using Library.Objects.Helpers.Response;
 using Library.Objects.Models.Interfaces;
+using Library.Objects.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,13 @@ namespace Library.Filters
         private const string SPACE = " ";
         private const string HEADER_VALUE_PREFIX = HttpAuthenticationScheme.BEARER + SPACE;
 
-        private readonly IAccessTokenModel _accessTokenModel;
+        private readonly IAccessTokenUtility _accessTokenUtility;
 
         public const string UNAUTHORIZED_MESSAGE = "Missing or invalid access token";
 
-        public AuthorizationFilter(IAccessTokenModel accessTokenModel)
+        public AuthorizationFilter(IAccessTokenUtility accessTokenUtility)
         {
-            _accessTokenModel = accessTokenModel;
+            _accessTokenUtility = accessTokenUtility;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -34,7 +35,7 @@ namespace Library.Filters
 
             var token = GetAccessToken(context.HttpContext.Request.Headers);
 
-            var identity = _accessTokenModel.GetIdentity(token);
+            var identity = _accessTokenUtility.GetIdentity(token);
             if (!identity.IsAuthenticated)
             {
                 context.Result = new ObjectResult(new MessageResponse(UNAUTHORIZED_MESSAGE))

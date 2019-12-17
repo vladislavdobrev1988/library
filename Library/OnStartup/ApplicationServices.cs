@@ -18,11 +18,9 @@ namespace Library.OnStartup
             services.AddSingleton<IAccessTokenUtility, AccessTokenUtility>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             
-            services.AddScoped<IAccessTokenRepository, AccessTokenRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IAccountModel, AccountModel>();
-            services.AddScoped<IAccessTokenModel, AccessTokenModel>();
             services.AddScoped<IUserModel, UserModel>();
         }
     }

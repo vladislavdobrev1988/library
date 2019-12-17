@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Helpers.Common;
 using Library.Objects.Helpers.Response;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
+using Library.Objects.Services.Interfaces;
 using Library.Objects.Validation;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,8 +14,8 @@ namespace Library.Objects.Models.Implementations
     public class AccountModel : IAccountModel
     {
         private readonly IUserModel _userModel;
-        private readonly IAccessTokenModel _accessTokenModel;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IAccessTokenUtility _accessTokenUtility;
 
         private static class ErrorMessage
         {
@@ -21,11 +23,11 @@ namespace Library.Objects.Models.Implementations
             public const string CREDENTIAL_MISMATCH = "Email or password mismatch";
         }
 
-        public AccountModel(IUserModel userModel, IAccessTokenModel accessTokenModel, IPasswordHasher<User> passwordHasher)
+        public AccountModel(IUserModel userModel, IPasswordHasher<User> passwordHasher, IAccessTokenUtility accessTokenUtility)
         {
             _userModel = userModel;
-            _accessTokenModel = accessTokenModel;
             _passwordHasher = passwordHasher;
+            _accessTokenUtility = accessTokenUtility;
         }
 
         public async Task<AccessTokenResponse> LogIn(CredentialProxy credentials)
@@ -38,8 +40,10 @@ namespace Library.Objects.Models.Implementations
             {
                 ThrowHttp.Unauthorized(ErrorMessage.CREDENTIAL_MISMATCH);
             }
+            
+            var claim = new Claim(ClaimTypes.Email, user.Email);
 
-            var token = _accessTokenModel.CreateAccessToken(user);
+            var token = _accessTokenUtility.CreateAccessToken(new[] { claim });
 
             return new AccessTokenResponse(token);
         }

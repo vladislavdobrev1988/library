@@ -9,9 +9,6 @@ namespace Library.Objects.Context
         {
             modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
 
-            modelBuilder.Entity<AccessToken>().HasIndex(x => x.Token);
-            modelBuilder.Entity<AccessToken>().HasIndex(x => x.Expires);
-
             SetDeleteBehavior(modelBuilder);
         }
 
