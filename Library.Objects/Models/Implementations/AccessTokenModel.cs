@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Library.Objects.Entities;
@@ -12,8 +13,6 @@ namespace Library.Objects.Models.Implementations
 {
     public class AccessTokenModel : IAccessTokenModel
     {
-        private const string VALIDITY_KEY = "Security:AccessTokenValidityInMinutes";
-
         private readonly IAccessTokenRepository _repository;
         private readonly IAccessTokenUtility _utility;
         private readonly IConfiguration _configuration;
@@ -25,54 +24,21 @@ namespace Library.Objects.Models.Implementations
             _configuration = configuration;
         }
 
-        public async Task<bool> IsValidAccessTokenAsync(string token)
+        public ClaimsIdentity GetIdentity(string token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return false;
-            }
-
-            var entity = await _repository.GetByToken(token);
-            if (entity == null)
-            {
-                return false;
-            }
-
-            if (entity.Expires < DateTime.UtcNow)
-            {
-                return false;
-            }
-
-            return true;
+            return _utility.GetIdentity(token);
         }
 
-        public async Task<string> CreateAccessTokenAsync(User user)
+        public string CreateAccessToken(User user)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var validity = _configuration.GetValue<double>(VALIDITY_KEY);
+            var claim = new Claim(ClaimTypes.Email , user.Email);
 
-            var expires = DateTime.UtcNow.AddMinutes(validity);
-
-            var claim = new Claim(IdentityClaims.EMAIL, user.Email);
-
-            var token = _utility.CreateAccessToken(expires, new[] { claim });
-
-            var entity = new AccessToken
-            {
-                Token = token,
-                Expires = expires,
-                UserId = user.Id
-            };
-
-            _repository.Add(entity);
-
-            await _repository.SaveChangesAsync();
-
-            return token;
+            return _utility.CreateAccessToken(new[] { claim });
         }
     }
 }

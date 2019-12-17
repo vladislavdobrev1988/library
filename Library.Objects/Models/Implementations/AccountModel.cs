@@ -39,7 +39,7 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.Unauthorized(ErrorMessage.CREDENTIAL_MISMATCH);
             }
 
-            var token = await _accessTokenModel.CreateAccessTokenAsync(user);
+            var token = _accessTokenModel.CreateAccessToken(user);
 
             return new AccessTokenResponse(token);
         }

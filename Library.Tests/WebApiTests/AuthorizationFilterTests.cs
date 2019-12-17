@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
+using System.Security.Claims;
 using Library.Filters;
 using Library.Objects.Helpers.Constants;
 using Library.Objects.Helpers.Response;
@@ -26,6 +26,7 @@ namespace Library.Tests.WebApiTests
         private Mock<HttpContext> _httpContextMock;
         private Mock<HttpRequest> _httpRequestMock;
         private Mock<IHeaderDictionary> _httpHeadersMock;
+        private Mock<ClaimsIdentity> _claimsIdentityMock;
 
         private Mock<IAccessTokenModel> _accessTokenModelMock;
 
@@ -42,6 +43,7 @@ namespace Library.Tests.WebApiTests
             _httpContextMock = new Mock<HttpContext>();
             _httpRequestMock = new Mock<HttpRequest>();
             _httpHeadersMock = new Mock<IHeaderDictionary>();
+            _claimsIdentityMock = new Mock<ClaimsIdentity>();
 
             _accessTokenModelMock = new Mock<IAccessTokenModel>();
 
@@ -63,41 +65,43 @@ namespace Library.Tests.WebApiTests
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_ActionIsDecoratedWithAllowAnonymous_AuthorizationSkipped()
+        public void OnAuthorization_ActionIsDecoratedWithAllowAnonymous_AuthorizationSkipped()
         {
             _actionInfoMock.Setup(x => x.IsDefined(typeof(AllowAnonymousAttribute), true)).Returns(true);
             
             var context = GetAuthorizationFilterContext();
 
-            await _filter.OnAuthorizationAsync(context);
+            _filter.OnAuthorization(context);
 
             Assert.IsNull(context.Result);
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_ControllerIsDecoratedWithAllowAnonymous_AuthorizationSkipped()
+        public void OnAuthorization_ControllerIsDecoratedWithAllowAnonymous_AuthorizationSkipped()
         {
             _controllerInfoMock.Setup(x => x.IsDefined(typeof(AllowAnonymousAttribute), true)).Returns(true);
             
             var context = GetAuthorizationFilterContext();
 
-            await _filter.OnAuthorizationAsync(context);
+            _filter.OnAuthorization(context);
 
             Assert.IsNull(context.Result);
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_NoAuthorizationHeader_UnauthorizedReturned()
+        public void OnAuthorization_NoAuthorizationHeader_UnauthorizedReturned()
         {
             var context = GetAuthorizationFilterContext();
+            
+            _accessTokenModelMock.Setup(x => x.GetIdentity(null)).Returns(_claimsIdentityMock.Object);
 
-            await _filter.OnAuthorizationAsync(context);
+            _filter.OnAuthorization(context);
 
             AssertUnauthorizedResult(context.Result);
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_InvalidHeaderValue_UnauthorizedReturned()
+        public void OnAuthorization_InvalidHeaderValue_UnauthorizedReturned()
         {
             var invalidHeaderValue = "a";
             var context = GetAuthorizationFilterContext();
@@ -105,15 +109,15 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
             _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(invalidHeaderValue));
 
-            await _filter.OnAuthorizationAsync(context);
+            _accessTokenModelMock.Setup(x => x.GetIdentity(null)).Returns(_claimsIdentityMock.Object);
+
+            _filter.OnAuthorization(context);
 
             AssertUnauthorizedResult(context.Result);
-
-            _accessTokenModelMock.Verify(x => x.IsValidAccessTokenAsync(null), Times.Once);
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_InvalidAccessToken_UnauthorizedReturned()
+        public void OnAuthorization_InvalidAccessToken_UnauthorizedReturned()
         {
             var token = "a";
             var context = GetAuthorizationFilterContext();
@@ -121,15 +125,15 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
             _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(GetHeaderValue(token)));
 
-            await _filter.OnAuthorizationAsync(context);
+            _accessTokenModelMock.Setup(x => x.GetIdentity(token)).Returns(_claimsIdentityMock.Object);
+
+            _filter.OnAuthorization(context);
 
             AssertUnauthorizedResult(context.Result);
-
-            _accessTokenModelMock.Verify(x => x.IsValidAccessTokenAsync(token), Times.Once);
         }
 
         [TestMethod]
-        public async Task OnAuthorizationAsync_ValidAccessToken_ContextResultNull()
+        public void OnAuthorization_ValidAccessToken_ContextResultNull()
         {
             var token = "a";
             var context = GetAuthorizationFilterContext();
@@ -137,9 +141,11 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
             _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(GetHeaderValue(token)));
 
-            _accessTokenModelMock.Setup(x => x.IsValidAccessTokenAsync(token)).Returns(Task.FromResult(true));
+            _claimsIdentityMock.Setup(x => x.IsAuthenticated).Returns(true);
 
-            await _filter.OnAuthorizationAsync(context);
+            _accessTokenModelMock.Setup(x => x.GetIdentity(token)).Returns(_claimsIdentityMock.Object);
+
+            _filter.OnAuthorization(context);
             
             Assert.IsNull(context.Result);
         }

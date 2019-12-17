@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Library.Filters
 {
-    public class AuthorizationFilter : IAsyncAuthorizationFilter
+    public class AuthorizationFilter : IAuthorizationFilter
     {
         private const string SPACE = " ";
         private const string HEADER_VALUE_PREFIX = HttpAuthenticationScheme.BEARER + SPACE;
@@ -25,7 +25,7 @@ namespace Library.Filters
             _accessTokenModel = accessTokenModel;
         }
 
-        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
             if (SkipAuthorization(context))
             {
@@ -34,8 +34,8 @@ namespace Library.Filters
 
             var token = GetAccessToken(context.HttpContext.Request.Headers);
 
-            var isValidAccessToken = await _accessTokenModel.IsValidAccessTokenAsync(token);
-            if (!isValidAccessToken)
+            var identity = _accessTokenModel.GetIdentity(token);
+            if (!identity.IsAuthenticated)
             {
                 context.Result = new ObjectResult(new MessageResponse(UNAUTHORIZED_MESSAGE))
                 {
