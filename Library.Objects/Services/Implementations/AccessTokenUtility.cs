@@ -55,7 +55,7 @@ namespace Library.Objects.Services.Implementations
         {
             if (!_handler.CanReadToken(token))
             {
-                return CreateUnauthenticated();
+                return CreateUnauthorized();
             }
 
             ClaimsPrincipal principal;
@@ -64,9 +64,9 @@ namespace Library.Objects.Services.Implementations
             {
                 principal = _handler.ValidateToken(token, _validationParameters, out SecurityToken securityToken);
             }
-            catch (SecurityTokenValidationException)
+            catch (SecurityTokenException)
             {
-                return CreateUnauthenticated();
+                return CreateUnauthorized();
             }
 
             return principal.Identity as ClaimsIdentity;
@@ -93,7 +93,7 @@ namespace Library.Objects.Services.Implementations
             };
         }
 
-        private ClaimsIdentity CreateUnauthenticated()
+        private ClaimsIdentity CreateUnauthorized()
         {
             return new ClaimsIdentity();
         }
