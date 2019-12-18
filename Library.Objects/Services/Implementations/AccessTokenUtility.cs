@@ -64,7 +64,7 @@ namespace Library.Objects.Services.Implementations
             {
                 principal = _handler.ValidateToken(token, _validationParameters, out SecurityToken securityToken);
             }
-            catch (SecurityTokenException)
+            catch (Exception)
             {
                 return CreateUnauthorized();
             }
