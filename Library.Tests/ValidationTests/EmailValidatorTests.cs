@@ -1,16 +1,24 @@
 ﻿using Library.Objects.Helpers.Constants;
-using Library.Objects.Validation;
+using Library.Objects.Validation.Implementations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Library.Tests.ValidationTests
 {
     [TestClass]
-    public class EmailValidationTests
+    public class EmailValidatorTests
     {
+        private EmailValidator _validator;
+
+        [TestInitialize]
+        public void Init()
+        {
+            _validator = new EmailValidator();
+        }
+
         [TestMethod]
         public void Validate_NullEmail_ReturnsExpectedMessage()
         {
-            var error = Email.Validate(null);
+            var error = _validator.Validate(null);
 
             Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, error);
         }
@@ -20,7 +28,7 @@ namespace Library.Tests.ValidationTests
         {
             var email = " ";
 
-            var error = Email.Validate(email);
+            var error = _validator.Validate(email);
 
             Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, error);
         }
@@ -30,9 +38,9 @@ namespace Library.Tests.ValidationTests
         {
             var email = "a";
 
-            var error = Email.Validate(email);
+            var error = _validator.Validate(email);
 
-            var expectedMessage = string.Format(Email.ErrorMessage.INVALID_EMAIL_FORMAT, email);
+            var expectedMessage = string.Format(EmailValidator.ErrorMessage.INVALID_EMAIL_FORMAT, email);
 
             Assert.AreEqual(expectedMessage, error);
         }
@@ -42,7 +50,7 @@ namespace Library.Tests.ValidationTests
         {
             var email = "a@a.com";
 
-            var error = Email.Validate(email);
+            var error = _validator.Validate(email);
 
             Assert.IsNull(error);
         }

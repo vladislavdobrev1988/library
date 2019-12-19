@@ -1,23 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Library.Objects.Helpers.Constants;
+using Library.Objects.Validation.Interfaces;
 
-namespace Library.Objects.Validation
+namespace Library.Objects.Validation.Implementations
 {
-    public static class Email
+    public class EmailValidator : IEmailValidator
     {
-        private static readonly EmailAddressAttribute _validator;
+        private readonly EmailAddressAttribute _validator;
 
         public static class ErrorMessage
         {
             public const string INVALID_EMAIL_FORMAT = "\"{0}\" is invalid email address";
         }
 
-        static Email()
+        public EmailValidator()
         {
             _validator = new EmailAddressAttribute();
         }
 
-        public static string Validate(string email)
+        public string Validate(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {

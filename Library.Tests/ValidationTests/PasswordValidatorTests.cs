@@ -1,16 +1,25 @@
 ﻿using Library.Objects.Helpers.Constants;
 using Library.Objects.Validation;
+using Library.Objects.Validation.Implementations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Library.Tests.ValidationTests
 {
     [TestClass]
-    public class PasswordValidationTests
+    public class PasswordValidatorTests
     {
+        private PasswordValidator _validator;
+
+        [TestInitialize]
+        public void Init()
+        {
+            _validator = new PasswordValidator();
+        }
+
         [TestMethod]
         public void Validate_NullPassword_ReturnsExpectedMessage()
         {
-            var error = Password.Validate(null);
+            var error = _validator.Validate(null);
 
             Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, error);
         }
@@ -19,7 +28,7 @@ namespace Library.Tests.ValidationTests
         {
             var password = " ";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
             Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, error);
         }
@@ -29,9 +38,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "aA1_";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.MinCharacterCount, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.MinCharacterCount, error);
         }
 
         [TestMethod]
@@ -39,9 +48,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "aa aaaA1_";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.ValidCharacters, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.ValidCharacters, error);
         }
 
         [TestMethod]
@@ -49,9 +58,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "ЖааaaaA1_";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.ValidCharacters, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.ValidCharacters, error);
         }
 
         [TestMethod]
@@ -59,9 +68,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "AAAAAA2$";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.MinLowerLetterCount, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.MinLowerLetterCount, error);
         }
 
         [TestMethod]
@@ -69,9 +78,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "bbbbbb3=";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.MinUpperLetterCount, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.MinUpperLetterCount, error);
         }
 
         [TestMethod]
@@ -79,9 +88,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "abcd_XYZ";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.MinDigitCount, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.MinDigitCount, error);
         }
 
         [TestMethod]
@@ -89,9 +98,9 @@ namespace Library.Tests.ValidationTests
         {
             var password = "hijkLMN0";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.MinSpecialCharacterCount, error);
+            Assert.AreEqual(PasswordValidator.ErrorMessage.MinSpecialCharacterCount, error);
         }
 
         [TestMethod]
@@ -99,7 +108,7 @@ namespace Library.Tests.ValidationTests
         {
             var password = "1q2w3e$R";
 
-            var error = Password.Validate(password);
+            var error = _validator.Validate(password);
 
             Assert.IsNull(error);
         }

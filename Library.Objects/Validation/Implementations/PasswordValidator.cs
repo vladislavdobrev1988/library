@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using Library.Objects.Helpers.Constants;
+using Library.Objects.Validation.Interfaces;
 
-namespace Library.Objects.Validation
+namespace Library.Objects.Validation.Implementations
 {
-    public static class Password
+    public class PasswordValidator : IPasswordValidator
     {
         private const byte MIN_CHARACTER_COUNT = 8;
         private const byte MIN_LOWER_LETTER_COUNT = 1;
@@ -24,7 +25,7 @@ namespace Library.Objects.Validation
             public readonly static string MinSpecialCharacterCount = string.Format("Password must contain at least {0} of the following special characters: {1}", MIN_SPECIAL_CHARACTER_COUNT, ALLOWED_SPECIAL_CHARACTERS);
         }
 
-        public static string Validate(string password)
+        public string Validate(string password)
         {
             if (string.IsNullOrWhiteSpace(password))
             {

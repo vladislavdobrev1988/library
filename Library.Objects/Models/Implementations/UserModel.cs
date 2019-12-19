@@ -5,7 +5,7 @@ using Library.Objects.Helpers.Constants;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
-using Library.Objects.Validation;
+using Library.Objects.Validation.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Library.Objects.Models.Implementations
@@ -14,6 +14,8 @@ namespace Library.Objects.Models.Implementations
     {
         private readonly IUserRepository _repository;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IEmailValidator _emailValidator;
+        private readonly IPasswordValidator _passwordValidator;
 
         public static class ErrorMessage
         {
@@ -23,10 +25,12 @@ namespace Library.Objects.Models.Implementations
             public const string EMAIL_EXISTS = "User with the same email already exists";
         }
 
-        public UserModel(IUserRepository repository, IPasswordHasher<User> passwordHasher)
+        public UserModel(IUserRepository repository, IPasswordHasher<User> passwordHasher, IEmailValidator emailValidator, IPasswordValidator passwordValidator)
         {
             _repository = repository;
             _passwordHasher = passwordHasher;
+            _emailValidator = emailValidator;
+            _passwordValidator = passwordValidator;
         }
 
         public async Task CreateUserAsync(UserProxy user)
@@ -74,13 +78,13 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.BadRequest(ErrorMessage.USER_REQUIRED);
             }
 
-            var emailError = Email.Validate(user.Email);
+            var emailError = _emailValidator.Validate(user.Email);
             if (emailError != null)
             {
                 ThrowHttp.BadRequest(emailError);
             }
 
-            var passwordError = Password.Validate(user.Password);
+            var passwordError = _passwordValidator.Validate(user.Password);
             if (passwordError != null)
             {
                 ThrowHttp.BadRequest(passwordError);

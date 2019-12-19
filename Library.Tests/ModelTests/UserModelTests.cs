@@ -9,6 +9,7 @@ using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
 using Library.Objects.Validation;
+using Library.Objects.Validation.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -20,6 +21,8 @@ namespace Library.Tests.ModelTests
     {
         private Mock<IUserRepository> _repositoryMock;
         private Mock<IPasswordHasher<User>> _passwordHasherMock;
+        private Mock<IEmailValidator> _emailValidatorMock;
+        private Mock<IPasswordValidator> _passwordValidatorMock;
 
         private IUserModel _model;
 
@@ -28,8 +31,10 @@ namespace Library.Tests.ModelTests
         {
             _repositoryMock = new Mock<IUserRepository>();
             _passwordHasherMock = new Mock<IPasswordHasher<User>>();
+            _emailValidatorMock = new Mock<IEmailValidator>();
+            _passwordValidatorMock = new Mock<IPasswordValidator>();
 
-            _model = new UserModel(_repositoryMock.Object, _passwordHasherMock.Object);
+            _model = new UserModel(_repositoryMock.Object, _passwordHasherMock.Object, _emailValidatorMock.Object, _passwordValidatorMock.Object);
         }
 
         [TestMethod]
@@ -41,53 +46,31 @@ namespace Library.Tests.ModelTests
         }
 
         [TestMethod]
-        public async Task CreateUserAsync_EmptyEmail_ThrowsAsExpected()
-        {
-            var user = GetValidUser();
-
-            user.Email = " ";
-
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
-
-            Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, ex.Message);
-        }
-
-        [TestMethod]
         public async Task CreateUserAsync_InvalidEmail_ThrowsAsExpected()
         {
+            const string ERROR_MESSAGE = "some";
+
             var user = GetValidUser();
 
-            user.Email = "x";
+            _emailValidatorMock.Setup(x => x.Validate(user.Email)).Returns(ERROR_MESSAGE);
 
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
-            var expectedMessage = string.Format(Email.ErrorMessage.INVALID_EMAIL_FORMAT, user.Email);
-
-            Assert.AreEqual(expectedMessage, ex.Message);
-        }
-
-        [TestMethod]
-        public async Task CreateUserAsync_EmptyPassword_ThrowsAsExpected()
-        {
-            var user = GetValidUser();
-
-            user.Password = " ";
-
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
-
-            Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, ex.Message);
+            Assert.AreEqual(ERROR_MESSAGE, ex.Message);
         }
 
         [TestMethod]
         public async Task CreateUserAsync_InvalidPassword_ThrowsAsExpected()
         {
+            const string ERROR_MESSAGE = "some";
+
             var user = GetValidUser();
 
-            user.Password = "@bC4";
+            _passwordValidatorMock.Setup(x => x.Validate(user.Password)).Returns(ERROR_MESSAGE);
 
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
-            Assert.AreEqual(Password.ErrorMessage.MinCharacterCount, ex.Message);
+            Assert.AreEqual(ERROR_MESSAGE, ex.Message);
         }
 
         [TestMethod]
