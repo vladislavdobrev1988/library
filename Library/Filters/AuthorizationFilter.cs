@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Library.Objects.Helpers.Constants;
 using Library.Objects.Helpers.Response;
-using Library.Objects.Models.Interfaces;
 using Library.Objects.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +34,7 @@ namespace Library.Filters
             var token = GetAccessToken(context.HttpContext.Request.Headers);
 
             var identity = _accessTokenUtility.GetIdentity(token);
+
             if (!identity.IsAuthenticated)
             {
                 context.Result = new ObjectResult(new MessageResponse(UNAUTHORIZED_MESSAGE))

@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Helpers.Common;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Helpers.Response;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Services.Interfaces;
-using Library.Objects.Validation;
 using Microsoft.AspNetCore.Identity;
 
 namespace Library.Objects.Models.Implementations
@@ -57,12 +57,12 @@ namespace Library.Objects.Models.Implementations
 
             if (string.IsNullOrWhiteSpace(credentials.Email))
             {
-                ThrowHttp.BadRequest(Email.ErrorMessage.REQUIRED);
+                ThrowHttp.BadRequest(CommonErrorMessage.EMAIL_REQUIRED);
             }
 
             if (string.IsNullOrWhiteSpace(credentials.Password))
             {
-                ThrowHttp.BadRequest(Password.ErrorMessage.Required);
+                ThrowHttp.BadRequest(CommonErrorMessage.PASSWORD_REQUIRED);
             }
         }
 

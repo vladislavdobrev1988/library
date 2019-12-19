@@ -1,4 +1,5 @@
-﻿using Library.Objects.Validation;
+﻿using Library.Objects.Helpers.Constants;
+using Library.Objects.Validation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Library.Tests.ValidationTests
@@ -11,7 +12,7 @@ namespace Library.Tests.ValidationTests
         {
             var error = Password.Validate(null);
 
-            Assert.AreEqual(Password.ErrorMessage.Required, error);
+            Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, error);
         }
         [TestMethod]
         public void Validate_WhiteSpacePassword_ReturnsExpectedMessage()
@@ -20,7 +21,7 @@ namespace Library.Tests.ValidationTests
 
             var error = Password.Validate(password);
 
-            Assert.AreEqual(Password.ErrorMessage.Required, error);
+            Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, error);
         }
 
         [TestMethod]

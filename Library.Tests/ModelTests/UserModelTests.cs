@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Exceptions;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Models.Implementations;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
@@ -48,7 +49,7 @@ namespace Library.Tests.ModelTests
 
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
-            Assert.AreEqual(Email.ErrorMessage.REQUIRED, ex.Message);
+            Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, ex.Message);
         }
 
         [TestMethod]
@@ -74,7 +75,7 @@ namespace Library.Tests.ModelTests
 
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
-            Assert.AreEqual(Password.ErrorMessage.Required, ex.Message);
+            Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, ex.Message);
         }
 
         [TestMethod]

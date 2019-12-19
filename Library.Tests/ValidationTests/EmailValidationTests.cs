@@ -1,4 +1,5 @@
-﻿using Library.Objects.Validation;
+﻿using Library.Objects.Helpers.Constants;
+using Library.Objects.Validation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Library.Tests.ValidationTests
@@ -11,7 +12,7 @@ namespace Library.Tests.ValidationTests
         {
             var error = Email.Validate(null);
 
-            Assert.AreEqual(Email.ErrorMessage.REQUIRED, error);
+            Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, error);
         }
 
         [TestMethod]
@@ -21,7 +22,7 @@ namespace Library.Tests.ValidationTests
 
             var error = Email.Validate(email);
 
-            Assert.AreEqual(Email.ErrorMessage.REQUIRED, error);
+            Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, error);
         }
 
         [TestMethod]

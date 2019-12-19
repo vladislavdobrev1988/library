@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Library.Objects.Helpers.Constants;
 
 namespace Library.Objects.Validation
 {
@@ -14,7 +15,6 @@ namespace Library.Objects.Validation
 
         public static class ErrorMessage
         {
-            public readonly static string Required = "Password is required";
             public readonly static string MinCharacterCount = string.Format("Password must be at least {0} characters", MIN_CHARACTER_COUNT);
             public readonly static string ValidCharacters = string.Format("Valid password characters are ONLY latin letters, digits or any of the following special characters: {0}", ALLOWED_SPECIAL_CHARACTERS);
 
@@ -28,7 +28,7 @@ namespace Library.Objects.Validation
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                return ErrorMessage.Required;
+                return CommonErrorMessage.PASSWORD_REQUIRED;
             }
 
             if (password.Length < MIN_CHARACTER_COUNT)

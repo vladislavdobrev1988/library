@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Helpers.Common;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
@@ -49,7 +50,7 @@ namespace Library.Objects.Models.Implementations
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                ThrowHttp.BadRequest(Email.ErrorMessage.REQUIRED);
+                ThrowHttp.BadRequest(CommonErrorMessage.EMAIL_REQUIRED);
             }
 
             return await _repository.GetByEmail(email);

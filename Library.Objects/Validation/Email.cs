@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Library.Objects.Helpers.Constants;
 
 namespace Library.Objects.Validation
 {
@@ -8,7 +9,6 @@ namespace Library.Objects.Validation
 
         public static class ErrorMessage
         {
-            public const string REQUIRED = "Email is required";
             public const string INVALID_EMAIL_FORMAT = "\"{0}\" is invalid email address";
         }
 
@@ -21,7 +21,7 @@ namespace Library.Objects.Validation
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                return ErrorMessage.REQUIRED;
+                return CommonErrorMessage.EMAIL_REQUIRED;
             }
 
             if (!_validator.IsValid(email))
