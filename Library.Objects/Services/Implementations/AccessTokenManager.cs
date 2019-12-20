@@ -11,18 +11,24 @@ namespace Library.Objects.Services.Implementations
 {
     public class AccessTokenManager : IAccessTokenManager
     {
-        private const string SECRET_KEY = "Security:AccessTokenSecret";
-        private const string VALIDITY_KEY = "Security:AccessTokenValidityInMinutes";
-
+        public static class ConfigurationKey
+        {
+            public const string SECRET = "Security:AccessTokenSecret";
+            public const string VALIDITY = "Security:AccessTokenValidityInMinutes";
+        }
+        
         private readonly JwtSecurityTokenHandler _handler;
         private readonly IConfiguration _configuration;
+        private readonly IDateTimeProvider _dateTimeProvider;
+
         private readonly SecurityKey _securityKey;
         private readonly TokenValidationParameters _validationParameters;
 
-        public AccessTokenManager(JwtSecurityTokenHandler handler, IConfiguration configuration)
+        public AccessTokenManager(JwtSecurityTokenHandler handler, IConfiguration configuration, IDateTimeProvider dateTimeProvider)
         {
             _handler = handler;
             _configuration = configuration;
+            _dateTimeProvider = dateTimeProvider;
 
             _securityKey = CreateSecurityKey();
             _validationParameters = CreateValidationParameters();
@@ -35,9 +41,9 @@ namespace Library.Objects.Services.Implementations
                 throw new ArgumentNullException(nameof(claims));
             }
 
-            var validity = _configuration.GetValue<double>(VALIDITY_KEY);
+            var validity = double.Parse(_configuration[ConfigurationKey.VALIDITY]);
 
-            var expires = DateTime.UtcNow.AddMinutes(validity);
+            var expires = _dateTimeProvider.UtcNow.AddMinutes(validity);
 
             var descriptor = new SecurityTokenDescriptor
             {
@@ -74,7 +80,7 @@ namespace Library.Objects.Services.Implementations
 
         private SecurityKey CreateSecurityKey()
         {
-            var secret = _configuration.GetValue<string>(SECRET_KEY);
+            var secret = _configuration[ConfigurationKey.SECRET];
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 

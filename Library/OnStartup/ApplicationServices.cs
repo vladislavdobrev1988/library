@@ -20,6 +20,7 @@ namespace Library.OnStartup
             services.AddSingleton<JwtSecurityTokenHandler>();
 
             services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath));
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddSingleton<IAccessTokenManager, AccessTokenManager>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<IEmailValidator, EmailValidator>();
