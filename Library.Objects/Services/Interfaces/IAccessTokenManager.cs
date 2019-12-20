@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace Library.Objects.Services.Interfaces
 {
-    public interface IAccessTokenUtility
+    public interface IAccessTokenManager
     {
         string CreateAccessToken(IEnumerable<Claim> claims);
         ClaimsIdentity GetIdentity(string token);

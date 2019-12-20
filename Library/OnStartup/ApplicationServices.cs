@@ -1,4 +1,5 @@
-﻿using Library.Objects.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Library.Objects.Entities;
 using Library.Objects.Models.Implementations;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Repositories.Implementations;
@@ -16,8 +17,10 @@ namespace Library.OnStartup
     {
         public static void Register(IServiceCollection services, string logFilePath)
         {
+            services.AddSingleton<JwtSecurityTokenHandler>();
+
             services.AddSingleton<IExceptionLogger, ExceptionLogger>(x => new ExceptionLogger(logFilePath));
-            services.AddSingleton<IAccessTokenUtility, AccessTokenUtility>();
+            services.AddSingleton<IAccessTokenManager, AccessTokenManager>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<IEmailValidator, EmailValidator>();
             services.AddSingleton<IPasswordValidator, PasswordValidator>();

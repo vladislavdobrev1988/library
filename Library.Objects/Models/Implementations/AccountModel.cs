@@ -15,7 +15,7 @@ namespace Library.Objects.Models.Implementations
     {
         private readonly IUserModel _userModel;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IAccessTokenUtility _accessTokenUtility;
+        private readonly IAccessTokenManager _accessTokenManager;
 
         private static class ErrorMessage
         {
@@ -23,11 +23,11 @@ namespace Library.Objects.Models.Implementations
             public const string CREDENTIAL_MISMATCH = "Email or password mismatch";
         }
 
-        public AccountModel(IUserModel userModel, IPasswordHasher<User> passwordHasher, IAccessTokenUtility accessTokenUtility)
+        public AccountModel(IUserModel userModel, IPasswordHasher<User> passwordHasher, IAccessTokenManager accessTokenManager)
         {
             _userModel = userModel;
             _passwordHasher = passwordHasher;
-            _accessTokenUtility = accessTokenUtility;
+            _accessTokenManager = accessTokenManager;
         }
 
         public async Task<AccessTokenResponse> LogIn(CredentialProxy credentials)
@@ -43,7 +43,7 @@ namespace Library.Objects.Models.Implementations
             
             var claim = new Claim(ClaimTypes.Email, user.Email);
 
-            var token = _accessTokenUtility.CreateAccessToken(new[] { claim });
+            var token = _accessTokenManager.CreateAccessToken(new[] { claim });
 
             return new AccessTokenResponse(token);
         }

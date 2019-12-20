@@ -15,13 +15,13 @@ namespace Library.Filters
         private const string SPACE = " ";
         private const string HEADER_VALUE_PREFIX = HttpAuthenticationScheme.BEARER + SPACE;
 
-        private readonly IAccessTokenUtility _accessTokenUtility;
+        private readonly IAccessTokenManager _accessTokenManager;
 
         public const string UNAUTHORIZED_MESSAGE = "Missing or invalid access token";
 
-        public AuthorizationFilter(IAccessTokenUtility accessTokenUtility)
+        public AuthorizationFilter(IAccessTokenManager accessTokenManager)
         {
-            _accessTokenUtility = accessTokenUtility;
+            _accessTokenManager = accessTokenManager;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -33,7 +33,7 @@ namespace Library.Filters
 
             var token = GetAccessToken(context.HttpContext.Request.Headers);
 
-            var identity = _accessTokenUtility.GetIdentity(token);
+            var identity = _accessTokenManager.GetIdentity(token);
 
             if (!identity.IsAuthenticated)
             {

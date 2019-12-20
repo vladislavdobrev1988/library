@@ -28,7 +28,7 @@ namespace Library.Tests.WebApiTests
         private Mock<IHeaderDictionary> _httpHeadersMock;
         private Mock<ClaimsIdentity> _claimsIdentityMock;
 
-        private Mock<IAccessTokenUtility> _accessTokenUtilityMock;
+        private Mock<IAccessTokenManager> _accessTokenManagerMock;
 
         private ActionContext _actionContext;
 
@@ -45,7 +45,7 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock = new Mock<IHeaderDictionary>();
             _claimsIdentityMock = new Mock<ClaimsIdentity>();
 
-            _accessTokenUtilityMock = new Mock<IAccessTokenUtility>();
+            _accessTokenManagerMock = new Mock<IAccessTokenManager>();
 
             _httpRequestMock.Setup(x => x.Headers).Returns(_httpHeadersMock.Object);
             _httpContextMock.Setup(x => x.Request).Returns(_httpRequestMock.Object);
@@ -61,7 +61,7 @@ namespace Library.Tests.WebApiTests
                 RouteData = new RouteData()
             };
 
-            _filter = new AuthorizationFilter(_accessTokenUtilityMock.Object);
+            _filter = new AuthorizationFilter(_accessTokenManagerMock.Object);
         }
 
         [TestMethod]
@@ -93,7 +93,7 @@ namespace Library.Tests.WebApiTests
         {
             var context = GetAuthorizationFilterContext();
             
-            _accessTokenUtilityMock.Setup(x => x.GetIdentity(null)).Returns(_claimsIdentityMock.Object);
+            _accessTokenManagerMock.Setup(x => x.GetIdentity(null)).Returns(_claimsIdentityMock.Object);
 
             _filter.OnAuthorization(context);
 
@@ -109,7 +109,7 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
             _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(invalidHeaderValue));
 
-            _accessTokenUtilityMock.Setup(x => x.GetIdentity(null)).Returns(_claimsIdentityMock.Object);
+            _accessTokenManagerMock.Setup(x => x.GetIdentity(null)).Returns(_claimsIdentityMock.Object);
 
             _filter.OnAuthorization(context);
 
@@ -125,7 +125,7 @@ namespace Library.Tests.WebApiTests
             _httpHeadersMock.Setup(x => x.ContainsKey(HttpHeader.AUTHORIZATION)).Returns(true);
             _httpHeadersMock.Setup(x => x[HttpHeader.AUTHORIZATION]).Returns(new StringValues(GetHeaderValue(token)));
 
-            _accessTokenUtilityMock.Setup(x => x.GetIdentity(token)).Returns(_claimsIdentityMock.Object);
+            _accessTokenManagerMock.Setup(x => x.GetIdentity(token)).Returns(_claimsIdentityMock.Object);
 
             _filter.OnAuthorization(context);
 
@@ -143,7 +143,7 @@ namespace Library.Tests.WebApiTests
 
             _claimsIdentityMock.Setup(x => x.IsAuthenticated).Returns(true);
 
-            _accessTokenUtilityMock.Setup(x => x.GetIdentity(token)).Returns(_claimsIdentityMock.Object);
+            _accessTokenManagerMock.Setup(x => x.GetIdentity(token)).Returns(_claimsIdentityMock.Object);
 
             _filter.OnAuthorization(context);
             

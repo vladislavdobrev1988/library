@@ -9,20 +9,20 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Library.Objects.Services.Implementations
 {
-    public class AccessTokenUtility : IAccessTokenUtility
+    public class AccessTokenManager : IAccessTokenManager
     {
         private const string SECRET_KEY = "Security:AccessTokenSecret";
         private const string VALIDITY_KEY = "Security:AccessTokenValidityInMinutes";
 
-        private readonly IConfiguration _configuration;
         private readonly JwtSecurityTokenHandler _handler;
+        private readonly IConfiguration _configuration;
         private readonly SecurityKey _securityKey;
         private readonly TokenValidationParameters _validationParameters;
 
-        public AccessTokenUtility(IConfiguration configuration)
+        public AccessTokenManager(JwtSecurityTokenHandler handler, IConfiguration configuration)
         {
+            _handler = handler;
             _configuration = configuration;
-            _handler = new JwtSecurityTokenHandler();
 
             _securityKey = CreateSecurityKey();
             _validationParameters = CreateValidationParameters();
