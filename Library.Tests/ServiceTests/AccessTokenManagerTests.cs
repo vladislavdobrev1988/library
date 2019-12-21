@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using Library.Objects.Services.Implementations;
 using Library.Objects.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -46,32 +49,72 @@ namespace Library.Tests.ServiceTests
         [TestMethod]
         public void CreateAccessToken_ValidInput_WorksAsExpected()
         {
-            //var claim = new Claim(ClaimTypes.Email, "a@b.com");
+            const string EXPECTED_EMAIL = "a@b.com";
+            const string EXPECTED_TOKEN = "someheader.somepayload.somesignature";
 
-            //var token = "GFQA1WRE.O6ITNA8.SDE6VW8E";
+            var utcNow = DateTime.UtcNow;            
+            _dateTimeProviderMock.Setup(x => x.UtcNow).Returns(utcNow);
 
-            //var jwtSecurityToken = new JwtSecurityToken();
+            var jwtSecurityToken = new JwtSecurityToken();
+            SecurityTokenDescriptor passedDescriptor = null;
 
-            //SecurityTokenDescriptor descriptor = null;
+            _jwtSecurityTokenHandlerMock
+                .Setup(x => x.CreateJwtSecurityToken(It.IsAny<SecurityTokenDescriptor>()))
+                .Returns(jwtSecurityToken)
+                .Callback<SecurityTokenDescriptor>(x => passedDescriptor = x);
 
-            //_jwtSecurityTokenHandlerMock
-            //    .Setup(x => x.CreateJwtSecurityToken(It.IsAny<SecurityTokenDescriptor>()))
-            //    .Returns(jwtSecurityToken)
-            //    .Callback<SecurityTokenDescriptor>(x => descriptor = x);
+            _jwtSecurityTokenHandlerMock
+                .Setup(x => x.WriteToken(jwtSecurityToken))
+                .Returns(EXPECTED_TOKEN);
 
-            //_jwtSecurityTokenHandlerMock
-            //    .Setup(x => x.WriteToken(jwtSecurityToken))
-            //    .Returns(token);
+            var token = _manager.CreateAccessToken(new[] { new Claim(ClaimTypes.Email, EXPECTED_EMAIL) });
 
-            //var result = _manager.CreateAccessToken(new[] { claim });
+            Assert.AreEqual(EXPECTED_TOKEN, token);
+            Assert.IsNotNull(passedDescriptor);
 
-            //Assert.AreEqual(token, result);
+            var expectedExpires = utcNow.AddMinutes(VALIDITY_IN_MINUTES);
+            Assert.AreEqual(expectedExpires, passedDescriptor.Expires);
 
-            //Assert.IsNotNull(descriptor);
+            Assert.IsNotNull(passedDescriptor.Subject);
+            Assert.IsNotNull(passedDescriptor.Subject.Claims);
+            Assert.AreEqual(1, passedDescriptor.Subject.Claims.Count());
+
+            var claim = passedDescriptor.Subject.Claims.Single();
+
+            Assert.AreEqual(ClaimTypes.Email, claim.Type);
+            Assert.AreEqual(EXPECTED_EMAIL, claim.Value);
+
+            Assert.IsNotNull(passedDescriptor.SigningCredentials);
+            Assert.AreEqual(passedDescriptor.SigningCredentials.Algorithm, SecurityAlgorithms.HmacSha256);
+
+            Assert.IsNotNull(passedDescriptor.SigningCredentials.Key);
+            Assert.IsInstanceOfType(passedDescriptor.SigningCredentials.Key, typeof(SymmetricSecurityKey));
+
+            var securityKey = passedDescriptor.SigningCredentials.Key as SymmetricSecurityKey;
+            var secret = Encoding.UTF8.GetString(securityKey.Key);
+            Assert.AreEqual(SECRET, secret);
         }
 
         [TestMethod]
-        public void GetIdentity_WorksAsExpected()
+        public void GetIdentity_NullToken_ReturnsUnauthorized()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetIdentity_WhitespaceToken_ReturnsUnauthorized()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetIdentity_InvalidToken_ReturnsUnauthorized()
+        {
+
+        }
+
+        [TestMethod]
+        public void GetIdentity_ValidToken_WorksAsExpected()
         {
 
         }
