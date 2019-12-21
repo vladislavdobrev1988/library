@@ -19,12 +19,11 @@ namespace Library.Tests.FilterTests
     [TestClass]
     public class ExceptionFilterTests
     {
-        private Mock<IExceptionLogger> _exceptionLoggerMock;
+        private readonly Mock<IExceptionLogger> _exceptionLoggerMock;
 
-        private ExceptionFilter _filter;
+        private readonly ExceptionFilter _filter;
 
-        [TestInitialize]
-        public void Init()
+        public ExceptionFilterTests()
         {
             _exceptionLoggerMock = new Mock<IExceptionLogger>();
             _filter = new ExceptionFilter(_exceptionLoggerMock.Object);

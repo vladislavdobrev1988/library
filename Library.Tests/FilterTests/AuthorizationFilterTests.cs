@@ -20,22 +20,21 @@ namespace Library.Tests.FilterTests
     [TestClass]
     public class AuthorizationFilterTests
     {
-        private Mock<MethodInfo> _actionInfoMock;
-        private Mock<TypeInfo> _controllerInfoMock;
+        private readonly Mock<MethodInfo> _actionInfoMock;
+        private readonly Mock<TypeInfo> _controllerInfoMock;
 
-        private Mock<HttpContext> _httpContextMock;
-        private Mock<HttpRequest> _httpRequestMock;
-        private Mock<IHeaderDictionary> _httpHeadersMock;
-        private Mock<ClaimsIdentity> _claimsIdentityMock;
+        private readonly Mock<HttpContext> _httpContextMock;
+        private readonly Mock<HttpRequest> _httpRequestMock;
+        private readonly Mock<IHeaderDictionary> _httpHeadersMock;
+        private readonly Mock<ClaimsIdentity> _claimsIdentityMock;
 
-        private Mock<IAccessTokenManager> _accessTokenManagerMock;
+        private readonly Mock<IAccessTokenManager> _accessTokenManagerMock;
 
-        private ActionContext _actionContext;
+        private readonly ActionContext _actionContext;
 
-        private AuthorizationFilter _filter;
+        private readonly AuthorizationFilter _filter;
 
-        [TestInitialize]
-        public void Init()
+        public AuthorizationFilterTests()
         {
             _actionInfoMock = new Mock<MethodInfo>();
             _controllerInfoMock = new Mock<TypeInfo>();

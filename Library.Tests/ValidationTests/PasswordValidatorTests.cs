@@ -7,10 +7,9 @@ namespace Library.Tests.ValidationTests
     [TestClass]
     public class PasswordValidatorTests
     {
-        private PasswordValidator _validator;
-
-        [TestInitialize]
-        public void Init()
+        private readonly PasswordValidator _validator;
+        
+        public PasswordValidatorTests()
         {
             _validator = new PasswordValidator();
         }

@@ -7,10 +7,9 @@ namespace Library.Tests.ValidationTests
     [TestClass]
     public class EmailValidatorTests
     {
-        private EmailValidator _validator;
-
-        [TestInitialize]
-        public void Init()
+        private readonly EmailValidator _validator;
+        
+        public EmailValidatorTests()
         {
             _validator = new EmailValidator();
         }

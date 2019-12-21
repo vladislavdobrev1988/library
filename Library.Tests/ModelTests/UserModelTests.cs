@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Exceptions;
 using Library.Objects.Models.Implementations;
-using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
 using Library.Objects.Validation.Interfaces;
@@ -17,15 +16,14 @@ namespace Library.Tests.ModelTests
     [TestClass]
     public class UserModelTests
     {
-        private Mock<IUserRepository> _repositoryMock;
-        private Mock<IPasswordHasher<User>> _passwordHasherMock;
-        private Mock<IEmailValidator> _emailValidatorMock;
-        private Mock<IPasswordValidator> _passwordValidatorMock;
+        private readonly Mock<IUserRepository> _repositoryMock;
+        private readonly Mock<IPasswordHasher<User>> _passwordHasherMock;
+        private readonly Mock<IEmailValidator> _emailValidatorMock;
+        private readonly Mock<IPasswordValidator> _passwordValidatorMock;
 
-        private IUserModel _model;
-
-        [TestInitialize]
-        public void Init()
+        private readonly UserModel _model;
+        
+        public UserModelTests()
         {
             _repositoryMock = new Mock<IUserRepository>();
             _passwordHasherMock = new Mock<IPasswordHasher<User>>();

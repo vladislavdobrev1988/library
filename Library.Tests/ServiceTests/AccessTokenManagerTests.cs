@@ -20,21 +20,25 @@ namespace Library.Tests.ServiceTests
 
         private delegate void ValidateCallback(string token, TokenValidationParameters validationParameters, out SecurityToken validatedToken);
 
-        private Mock<JwtSecurityTokenHandler> _jwtSecurityTokenHandlerMock;
-        private Mock<IConfiguration> _configurationMock;
-        private Mock<IDateTimeProvider> _dateTimeProviderMock;
+        private readonly Mock<JwtSecurityTokenHandler> _jwtSecurityTokenHandlerMock;
+        private readonly Mock<IConfiguration> _configurationMock;
+        private readonly Mock<IDateTimeProvider> _dateTimeProviderMock;
 
-        private AccessTokenManager _manager;
+        private readonly AccessTokenManager _manager;
 
-        [TestInitialize]
-        public void Init()
+        public AccessTokenManagerTests()
         {
             _jwtSecurityTokenHandlerMock = new Mock<JwtSecurityTokenHandler>();
             _configurationMock = new Mock<IConfiguration>();
             _dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            
+            _configurationMock
+                .Setup(x => x[AccessTokenManager.ConfigurationKey.VALIDITY])
+                .Returns(VALIDITY_IN_MINUTES.ToString());
 
-            _configurationMock.Setup(x => x[AccessTokenManager.ConfigurationKey.VALIDITY]).Returns(VALIDITY_IN_MINUTES.ToString());
-            _configurationMock.Setup(x => x[AccessTokenManager.ConfigurationKey.SECRET]).Returns(SECRET);
+            _configurationMock
+                .Setup(x => x[AccessTokenManager.ConfigurationKey.SECRET])
+                .Returns(SECRET);
 
             _manager = new AccessTokenManager(_jwtSecurityTokenHandlerMock.Object, _configurationMock.Object, _dateTimeProviderMock.Object);
         }
