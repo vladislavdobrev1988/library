@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Library.Tests.WebApiTests
+namespace Library.Tests.FilterTests
 {
     [TestClass]
     public class ExceptionFilterTests

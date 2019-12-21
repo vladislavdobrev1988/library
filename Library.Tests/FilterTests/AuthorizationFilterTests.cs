@@ -15,7 +15,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Library.Tests.WebApiTests
+namespace Library.Tests.FilterTests
 {
     [TestClass]
     public class AuthorizationFilterTests
