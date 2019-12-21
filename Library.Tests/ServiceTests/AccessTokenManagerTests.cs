@@ -18,6 +18,8 @@ namespace Library.Tests.ServiceTests
         private const double VALIDITY_IN_MINUTES = 20;
         private const string SECRET = "KA0234JVASFMBEH34BCV";
 
+        private delegate void ValidateCallback(string token, TokenValidationParameters validationParameters, out SecurityToken validatedToken);
+
         private Mock<JwtSecurityTokenHandler> _jwtSecurityTokenHandlerMock;
         private Mock<IConfiguration> _configurationMock;
         private Mock<IDateTimeProvider> _dateTimeProviderMock;
@@ -87,12 +89,7 @@ namespace Library.Tests.ServiceTests
             Assert.IsNotNull(passedDescriptor.SigningCredentials);
             Assert.AreEqual(passedDescriptor.SigningCredentials.Algorithm, SecurityAlgorithms.HmacSha256);
 
-            Assert.IsNotNull(passedDescriptor.SigningCredentials.Key);
-            Assert.IsInstanceOfType(passedDescriptor.SigningCredentials.Key, typeof(SymmetricSecurityKey));
-
-            var securityKey = passedDescriptor.SigningCredentials.Key as SymmetricSecurityKey;
-            var secret = Encoding.UTF8.GetString(securityKey.Key);
-            Assert.AreEqual(SECRET, secret);
+            AssertSecurityKey(passedDescriptor.SigningCredentials.Key);
         }
 
         [TestMethod]
@@ -117,16 +114,32 @@ namespace Library.Tests.ServiceTests
             const string TOKEN = "some";
 
             _jwtSecurityTokenHandlerMock.Setup(x => x.CanReadToken(TOKEN)).Returns(true);
+            
+            TokenValidationParameters passedParameters = null;
+            var callback = new ValidateCallback((string t, TokenValidationParameters p, out SecurityToken st) =>
+            {
+                st = null;
+                passedParameters = p;
+            });
 
             SecurityToken token;
             _jwtSecurityTokenHandlerMock
-                .Setup(h => h.ValidateToken(TOKEN, It.Is<TokenValidationParameters>(x => x != null), out token))
+                .Setup(h => h.ValidateToken(TOKEN, It.IsAny<TokenValidationParameters>(), out token))
+                .Callback(callback)
                 .Throws(new Exception());
 
             var result = _manager.GetIdentity(TOKEN);
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.IsAuthenticated);
+
+            Assert.IsNotNull(passedParameters);
+            Assert.IsTrue(passedParameters.RequireExpirationTime);
+            Assert.IsTrue(passedParameters.ValidateLifetime);
+            Assert.IsFalse(passedParameters.ValidateIssuer);
+            Assert.IsFalse(passedParameters.ValidateAudience);
+
+            AssertSecurityKey(passedParameters.IssuerSigningKey);
         }
 
         [TestMethod]
@@ -138,15 +151,42 @@ namespace Library.Tests.ServiceTests
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity());
 
+            TokenValidationParameters passedParameters = null;
+            var callback = new ValidateCallback((string t, TokenValidationParameters p, out SecurityToken st) =>
+            {
+                st = null;
+                passedParameters = p;
+            });
+
             SecurityToken token;
             _jwtSecurityTokenHandlerMock
-                .Setup(h => h.ValidateToken(TOKEN, It.Is<TokenValidationParameters>(x => x != null), out token))
+                .Setup(h => h.ValidateToken(TOKEN, It.IsAny<TokenValidationParameters>(), out token))
+                .Callback(callback)
                 .Returns(principal);
 
             var result = _manager.GetIdentity(TOKEN);
 
             Assert.IsNotNull(result);
             Assert.AreSame(principal.Identity, result);
+
+            Assert.IsNotNull(passedParameters);
+            Assert.IsTrue(passedParameters.RequireExpirationTime);
+            Assert.IsTrue(passedParameters.ValidateLifetime);
+            Assert.IsFalse(passedParameters.ValidateIssuer);
+            Assert.IsFalse(passedParameters.ValidateAudience);
+
+            AssertSecurityKey(passedParameters.IssuerSigningKey);
+        }
+
+        private void AssertSecurityKey(SecurityKey securityKey)
+        {
+            Assert.IsNotNull(securityKey);
+            Assert.IsInstanceOfType(securityKey, typeof(SymmetricSecurityKey));
+
+            var symmetricSecurityKey = securityKey as SymmetricSecurityKey;
+            var secret = Encoding.UTF8.GetString(symmetricSecurityKey.Key);
+
+            Assert.AreEqual(SECRET, secret);
         }
     }
 }
