@@ -120,7 +120,7 @@ namespace Library.Tests.ServiceTests
 
             SecurityToken token;
             _jwtSecurityTokenHandlerMock
-                .Setup(x => x.ValidateToken(It.IsAny<string>(), It.IsAny<TokenValidationParameters>(), out token))
+                .Setup(h => h.ValidateToken(TOKEN, It.Is<TokenValidationParameters>(x => x != null), out token))
                 .Throws(new Exception());
 
             var result = _manager.GetIdentity(TOKEN);
@@ -140,7 +140,7 @@ namespace Library.Tests.ServiceTests
 
             SecurityToken token;
             _jwtSecurityTokenHandlerMock
-                .Setup(x => x.ValidateToken(It.IsAny<string>(), It.IsAny<TokenValidationParameters>(), out token))
+                .Setup(h => h.ValidateToken(TOKEN, It.Is<TokenValidationParameters>(x => x != null), out token))
                 .Returns(principal);
 
             var result = _manager.GetIdentity(TOKEN);
