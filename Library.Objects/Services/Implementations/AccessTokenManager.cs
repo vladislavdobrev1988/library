@@ -82,9 +82,9 @@ namespace Library.Objects.Services.Implementations
         {
             var secret = _configuration[ConfigurationKey.SECRET];
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+            var key = Encoding.UTF8.GetBytes(secret);
 
-            return securityKey;
+            return new SymmetricSecurityKey(key);
         }
 
         private TokenValidationParameters CreateValidationParameters()

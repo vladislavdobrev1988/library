@@ -96,27 +96,57 @@ namespace Library.Tests.ServiceTests
         }
 
         [TestMethod]
-        public void GetIdentity_NullToken_ReturnsUnauthorized()
+        public void GetIdentity_MalformedToken_ReturnsUnauthorized()
         {
+            const string TOKEN = "some";
 
-        }
+            _jwtSecurityTokenHandlerMock.Setup(x => x.CanReadToken(TOKEN)).Returns(false);
 
-        [TestMethod]
-        public void GetIdentity_WhitespaceToken_ReturnsUnauthorized()
-        {
+            var result = _manager.GetIdentity(TOKEN);
 
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsAuthenticated);
+
+            SecurityToken token;
+            _jwtSecurityTokenHandlerMock.Verify(x => x.ValidateToken(It.IsAny<string>(), It.IsAny<TokenValidationParameters>(), out token), Times.Never);
         }
 
         [TestMethod]
         public void GetIdentity_InvalidToken_ReturnsUnauthorized()
         {
+            const string TOKEN = "some";
 
+            _jwtSecurityTokenHandlerMock.Setup(x => x.CanReadToken(TOKEN)).Returns(true);
+
+            SecurityToken token;
+            _jwtSecurityTokenHandlerMock
+                .Setup(x => x.ValidateToken(It.IsAny<string>(), It.IsAny<TokenValidationParameters>(), out token))
+                .Throws(new Exception());
+
+            var result = _manager.GetIdentity(TOKEN);
+
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsAuthenticated);
         }
 
         [TestMethod]
         public void GetIdentity_ValidToken_WorksAsExpected()
         {
+            const string TOKEN = "some";
 
+            _jwtSecurityTokenHandlerMock.Setup(x => x.CanReadToken(TOKEN)).Returns(true);
+
+            var principal = new ClaimsPrincipal(new ClaimsIdentity());
+
+            SecurityToken token;
+            _jwtSecurityTokenHandlerMock
+                .Setup(x => x.ValidateToken(It.IsAny<string>(), It.IsAny<TokenValidationParameters>(), out token))
+                .Returns(principal);
+
+            var result = _manager.GetIdentity(TOKEN);
+
+            Assert.IsNotNull(result);
+            Assert.AreSame(principal.Identity, result);
         }
     }
 }
