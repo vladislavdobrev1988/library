@@ -17,7 +17,7 @@ namespace Library.Objects.Models.Implementations
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAccessTokenManager _accessTokenManager;
 
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string CREDENTIALS_REQUIRED = "Credentials object is required";
             public const string CREDENTIAL_MISMATCH = "Email or password mismatch";
