@@ -36,7 +36,7 @@ namespace Library.Controllers
         [AllowAnonymous]
         public async Task<AccessTokenResponse> LogIn(CredentialProxy credentials)
         {
-            return await _accountModel.LogIn(credentials);
+            return await _accountModel.LogInAsync(credentials);
         }
     }
 }

@@ -36,59 +36,59 @@ namespace Library.Tests.ModelTests
         }
 
         [TestMethod]
-        public async Task LogIn_NullCredentials_ThrowsException()
+        public async Task LogInAsync_NullCredentials_ThrowsException()
         {
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(null));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(null));
 
             Assert.AreEqual(AccountModel.ErrorMessage.CREDENTIALS_REQUIRED, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_NullEmail_ThrowsException()
+        public async Task LogInAsync_NullEmail_ThrowsException()
         {
             var credentials = GetCredentials();
             credentials.Email = null;
 
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(credentials));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_EmptyEmail_ThrowsException()
+        public async Task LogInAsync_EmptyEmail_ThrowsException()
         {
             var credentials = GetCredentials();
             credentials.Email = " ";
 
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(credentials));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_NullPassword_ThrowsException()
+        public async Task LogInAsync_NullPassword_ThrowsException()
         {
             var credentials = GetCredentials();
             credentials.Password = null;
 
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(credentials));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_EmptyPassword_ThrowsException()
+        public async Task LogInAsync_EmptyPassword_ThrowsException()
         {
             var credentials = GetCredentials();
             credentials.Password = " ";
 
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(credentials));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_UserNotFound_ThrowsException()
+        public async Task LogInAsync_UserNotFound_ThrowsException()
         {
             var credentials = GetCredentials();
 
@@ -96,13 +96,13 @@ namespace Library.Tests.ModelTests
                 .Setup(x => x.GetByEmailAsync(credentials.Email))
                 .Returns(Task.FromResult((User)null));
 
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(credentials));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(AccountModel.ErrorMessage.CREDENTIAL_MISMATCH, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_PasswordMismatch_ThrowsException()
+        public async Task LogInAsync_PasswordMismatch_ThrowsException()
         {
             var credentials = GetCredentials();
 
@@ -120,13 +120,13 @@ namespace Library.Tests.ModelTests
                 .Setup(x => x.VerifyHashedPassword(null, user.PasswordHash, credentials.Password))
                 .Returns(PasswordVerificationResult.Failed);
 
-            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogIn(credentials));
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(AccountModel.ErrorMessage.CREDENTIAL_MISMATCH, ex.Message);
         }
 
         [TestMethod]
-        public async Task LogIn_ValidCredentials_WorksAsExpected()
+        public async Task LogInAsync_ValidCredentials_WorksAsExpected()
         {
             const string TOKEN = "mqerv134fjqv";
 
@@ -154,7 +154,7 @@ namespace Library.Tests.ModelTests
                 .Setup(m => m.CreateAccessToken(It.Is(expected)))
                 .Returns(TOKEN);
 
-            var result = await _model.LogIn(credentials);
+            var result = await _model.LogInAsync(credentials);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(TOKEN, result.AccessToken);

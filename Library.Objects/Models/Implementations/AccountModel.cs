@@ -30,7 +30,7 @@ namespace Library.Objects.Models.Implementations
             _accessTokenManager = accessTokenManager;
         }
 
-        public async Task<AccessTokenResponse> LogIn(CredentialProxy credentials)
+        public async Task<AccessTokenResponse> LogInAsync(CredentialProxy credentials)
         {
             ValidateCredentials(credentials);
 

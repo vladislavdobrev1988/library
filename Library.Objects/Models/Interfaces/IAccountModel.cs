@@ -6,6 +6,6 @@ namespace Library.Objects.Models.Interfaces
 {
     public interface IAccountModel
     {
-        Task<AccessTokenResponse> LogIn(CredentialProxy credentials);
+        Task<AccessTokenResponse> LogInAsync(CredentialProxy credentials);
     }
 }
