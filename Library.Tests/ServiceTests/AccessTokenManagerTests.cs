@@ -66,8 +66,8 @@ namespace Library.Tests.ServiceTests
 
             _jwtSecurityTokenHandlerMock
                 .Setup(x => x.CreateJwtSecurityToken(It.IsAny<SecurityTokenDescriptor>()))
-                .Returns(jwtSecurityToken)
-                .Callback<SecurityTokenDescriptor>(x => passedDescriptor = x);
+                .Callback<SecurityTokenDescriptor>(x => passedDescriptor = x)
+                .Returns(jwtSecurityToken);
 
             _jwtSecurityTokenHandlerMock
                 .Setup(x => x.WriteToken(jwtSecurityToken))

@@ -135,7 +135,7 @@ namespace Library.Tests.ModelTests
             var user = new User
             {
                 Email = credentials.Email,
-                PasswordHash = "JKQWV"
+                PasswordHash = "FKkcq93jrfKFQj203fj=="
             };
 
             _userModelMock
@@ -146,9 +146,9 @@ namespace Library.Tests.ModelTests
                 .Setup(x => x.VerifyHashedPassword(null, user.PasswordHash, credentials.Password))
                 .Returns(PasswordVerificationResult.Success);
 
-            Expression<Func<IEnumerable<Claim>, bool>> expected = collection =>
-                collection != null &&
-                collection.Any(x => x.Type == ClaimTypes.Email && x.Value == user.Email);
+            Expression<Func<IEnumerable<Claim>, bool>> expected = claims =>
+                claims != null &&
+                claims.Any(x => x.Type == ClaimTypes.Email && x.Value == user.Email);
 
             _accessTokenManagerMock
                 .Setup(m => m.CreateAccessToken(It.Is(expected)))

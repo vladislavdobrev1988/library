@@ -46,7 +46,7 @@ namespace Library.Tests.ModelTests
         {
             const string ERROR_MESSAGE = "some";
 
-            var user = GetValidUser();
+            var user = GetUser();
 
             _emailValidatorMock.Setup(x => x.Validate(user.Email)).Returns(ERROR_MESSAGE);
 
@@ -60,7 +60,7 @@ namespace Library.Tests.ModelTests
         {
             const string ERROR_MESSAGE = "some";
 
-            var user = GetValidUser();
+            var user = GetUser();
 
             _passwordValidatorMock.Setup(x => x.Validate(user.Password)).Returns(ERROR_MESSAGE);
 
@@ -72,7 +72,7 @@ namespace Library.Tests.ModelTests
         [TestMethod]
         public async Task CreateUserAsync_EmptyFirstName_ThrowsAsExpected()
         {
-            var user = GetValidUser();
+            var user = GetUser();
 
             user.FirstName = " ";
 
@@ -84,7 +84,7 @@ namespace Library.Tests.ModelTests
         [TestMethod]
         public async Task CreateUserAsync_EmptyLastName_ThrowsAsExpected()
         {
-            var user = GetValidUser();
+            var user = GetUser();
 
             user.LastName = " ";
 
@@ -96,7 +96,7 @@ namespace Library.Tests.ModelTests
         [TestMethod]
         public async Task CreateUserAsync_ExistingEmail_ThrowsAsExpected()
         {
-            var user = GetValidUser();
+            var user = GetUser();
 
             _repositoryMock.Setup(x => x.GetByEmail(user.Email)).Returns(Task.FromResult(new User()));
 
@@ -108,7 +108,7 @@ namespace Library.Tests.ModelTests
         [TestMethod]
         public async Task CreateUserAsync_ValidInput_WorksAsExpected()
         {
-            var user = GetValidUser();
+            var user = GetUser();
 
             var passwordHash = "FKkcq93jrfKFQj203fj==";
 
@@ -126,7 +126,7 @@ namespace Library.Tests.ModelTests
             _repositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
-        private UserProxy GetValidUser()
+        private UserProxy GetUser()
         {
             return new UserProxy
             {

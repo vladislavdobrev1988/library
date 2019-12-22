@@ -156,6 +156,7 @@ namespace Library.Tests.FilterTests
 
         private void AssertUnauthorizedResult(IActionResult result)
         {
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             var objectResult = result as ObjectResult;
 
