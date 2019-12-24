@@ -1,4 +1,5 @@
-﻿using Library.Objects.Proxies.Base;
+﻿using System;
+using Library.Objects.Proxies.Base;
 
 namespace Library.Objects.Proxies
 {
@@ -6,5 +7,7 @@ namespace Library.Objects.Proxies
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string DateOfBirth { get; set; }
+        public string DateOfDeath { get; set; }
     }
 }

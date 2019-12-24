@@ -8,6 +8,7 @@ namespace Library.Objects.Context
         public LibraryContext(DbContextOptions<LibraryContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Author> Authors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

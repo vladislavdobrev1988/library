@@ -9,6 +9,8 @@ namespace Library.Objects.Context
         {
             modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
 
+            modelBuilder.Entity<Author>().HasIndex(nameof(Author.FirstName), nameof(Author.LastName)).IsUnique();
+
             SetDeleteBehavior(modelBuilder);
         }
 

@@ -27,9 +27,11 @@ namespace Library.OnStartup
             services.AddSingleton<IPasswordValidator, PasswordValidator>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
 
             services.AddScoped<IAccountModel, AccountModel>();
             services.AddScoped<IUserModel, UserModel>();
+            services.AddScoped<IAuthorModel, AuthorModel>();
         }
     }
 }
