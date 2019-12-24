@@ -11,6 +11,14 @@ namespace Library.Objects.Models.Implementations
 {
     public class AuthorModel : IAuthorModel
     {
+        private static class ErrorMessage
+        {
+            public const string AUTHOR_REQUIRED = "Author object is required";
+            public const string FIRST_NAME_REQUIRED = "First name is required";
+            public const string LAST_NAME_REQUIRED = "Last name is required";
+            public const string AUTHOR_EXISTS = "Author with the same name already exists";
+        }
+
         private readonly IAuthorRepository _repository;
         private readonly IDateValidator _dateValidator;
 
@@ -23,6 +31,12 @@ namespace Library.Objects.Models.Implementations
         public async Task<int> CreateAuthorAsync(AuthorProxy author)
         {
             Validate(author);
+
+            var existing = await _repository.GetByNameAsync(author.FirstName, author.LastName);
+            if (existing != null)
+            {
+                ThrowHttp.Conflict(ErrorMessage.AUTHOR_EXISTS);
+            }
 
             var entity = MapToEntity(author);
 
@@ -48,7 +62,20 @@ namespace Library.Objects.Models.Implementations
 
         private void Validate(AuthorProxy author)
         {
-            // validate author
+            if (author == null)
+            {
+                ThrowHttp.BadRequest(ErrorMessage.AUTHOR_REQUIRED);
+            }
+
+            if (string.IsNullOrWhiteSpace(author.FirstName))
+            {
+                ThrowHttp.BadRequest(ErrorMessage.FIRST_NAME_REQUIRED);
+            }
+
+            if (string.IsNullOrWhiteSpace(author.LastName))
+            {
+                ThrowHttp.BadRequest(ErrorMessage.LAST_NAME_REQUIRED);
+            }
 
             var dateOfBirthError = _dateValidator.Validate(author.DateOfBirth);
             if (dateOfBirthError != null)
