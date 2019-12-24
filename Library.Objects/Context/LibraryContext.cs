@@ -9,11 +9,13 @@ namespace Library.Objects.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ConfigureEntityUser(modelBuilder);
             ConfigureEntityAuthor(modelBuilder);
+            ConfigureEntityBook(modelBuilder);
 
             ConfigureDeleteBehavior(modelBuilder);
         }

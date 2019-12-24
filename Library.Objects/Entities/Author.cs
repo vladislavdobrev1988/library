@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Library.Objects.Attributes;
 using Library.Objects.Entities.Base;
@@ -19,5 +20,7 @@ namespace Library.Objects.Entities
         public DateTime DateOfBirth { get; set; }
 
         public DateTime? DateOfDeath { get; set; }
+
+        public IList<Book> Books { get; set; }
     }
 }

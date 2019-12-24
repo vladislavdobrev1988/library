@@ -19,6 +19,11 @@ namespace Library.Objects.Context
             modelBuilder.Entity<Author>().Property(x => x.DateOfDeath).HasColumnType(SqlDataType.DATE);
         }
 
+        private void ConfigureEntityBook(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>().Property(x => x.ReleaseDate).HasColumnType(SqlDataType.DATE);
+        }
+
         private void ConfigureDeleteBehavior(ModelBuilder modelBuilder)
         {
             foreach (var type in modelBuilder.Model.GetEntityTypes())

@@ -30,10 +30,12 @@ namespace Library.OnStartup
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
 
             services.AddScoped<IAccountModel, AccountModel>();
             services.AddScoped<IUserModel, UserModel>();
             services.AddScoped<IAuthorModel, AuthorModel>();
+            services.AddScoped<IBookModel, BookModel>();
         }
     }
 }
