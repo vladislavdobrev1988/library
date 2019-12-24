@@ -7,6 +7,8 @@ namespace Library.Objects.Models.Interfaces
     public interface IAuthorModel
     {
         Task<IdResponse> CreateAuthorAsync(AuthorProxy author);
+        Task UpdateAuthorAsync(int id, AuthorProxy author);
         Task<AuthorProxy> GetAuthorByIdAsync(int id);
+        Task DeleteAuthorAsync(int id);
     }
 }

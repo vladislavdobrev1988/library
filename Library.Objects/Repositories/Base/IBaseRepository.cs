@@ -10,6 +10,7 @@ namespace Library.Objects.Repositories.Base
         void AddWithoutSave(IEnumerable<T> entities);
         Task<int> AddAsync(T entity);
         Task<T> GetByIdAsync(int id);
+        Task RemoveAsync(T entity);
         Task<int> SaveChangesAsync();
     }
 }

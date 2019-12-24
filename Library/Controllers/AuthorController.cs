@@ -26,11 +26,29 @@ namespace Library.Controllers
             return StatusCode(HttpStatusCode.CREATED, response);
         }
 
+        [HttpPut]
+        [IdRoute]
+        public async Task<ActionResult> UpdateAsync(int id, AuthorProxy author)
+        {
+            await _authorModel.UpdateAuthorAsync(id, author);
+
+            return Ok();
+        }
+
         [HttpGet]
         [IdRoute]
         public async Task<AuthorProxy> GetByIdAsync(int id)
         {
             return await _authorModel.GetAuthorByIdAsync(id);
+        }
+
+        [HttpDelete]
+        [IdRoute]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            await _authorModel.DeleteAuthorAsync(id);
+
+            return Ok();
         }
     }
 }

@@ -41,11 +41,31 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.Conflict(ErrorMessage.AUTHOR_EXISTS);
             }
 
-            var entity = MapToEntity(author);
+            var entity = new Author();
+
+            MapToEntity(author, entity);
 
             var id = await _repository.AddAsync(entity);
 
             return new IdResponse(id);
+        }
+
+        public async Task UpdateAuthorAsync(int id, AuthorProxy author)
+        {
+            Validate(author);
+
+            var entity = await GetByIdAsync(id);
+
+            var existing = await _repository.GetByNameAsync(author.FirstName, author.LastName);
+
+            if (existing != null && existing.Id != entity.Id)
+            {
+                ThrowHttp.Conflict(ErrorMessage.AUTHOR_EXISTS);
+            }
+
+            MapToEntity(author, entity);
+
+            await _repository.SaveChangesAsync();
         }
 
         public async Task<AuthorProxy> GetAuthorByIdAsync(int id)
@@ -55,29 +75,34 @@ namespace Library.Objects.Models.Implementations
             return MapToProxy(author);
         }
 
+        public async Task DeleteAuthorAsync(int id)
+        {
+            var author = await GetByIdAsync(id);
+
+            await _repository.RemoveAsync(author);
+        }
+
         private async Task<Author> GetByIdAsync(int id)
         {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
+            var author = await _repository.GetByIdAsync(id);
+            if (author == null)
             {
                 var errorMessage = string.Format(ErrorMessage.NOT_FOUND_FORMAT, id);
                 ThrowHttp.NotFound(errorMessage);
             }
 
-            return entity;
+            return author;
         }
 
-        private Author MapToEntity(AuthorProxy author)
+        private void MapToEntity(AuthorProxy proxy, Author entity)
         {
-            var deceased = !string.IsNullOrWhiteSpace(author.DateOfDeath);
+            var deceased = !string.IsNullOrWhiteSpace(proxy.DateOfDeath);
 
-            return new Author
-            {
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                DateOfBirth = DateTime.Parse(author.DateOfBirth),
-                DateOfDeath = deceased ? DateTime.Parse(author.DateOfDeath) : (DateTime?)null
-            };
+            entity.FirstName = proxy.FirstName;
+            entity.LastName = proxy.LastName;
+            entity.DateOfBirth = DateTime.Parse(proxy.DateOfBirth);
+            entity.DateOfDeath = deceased ? DateTime.Parse(proxy.DateOfDeath) : (DateTime?)null;
+
         }
 
         private AuthorProxy MapToProxy(Author author)

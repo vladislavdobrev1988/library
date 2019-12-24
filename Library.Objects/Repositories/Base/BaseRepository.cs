@@ -42,6 +42,13 @@ namespace Library.Objects.Repositories.Base
             return entity.Id;
         }
 
+        public async Task RemoveAsync(T entity)
+        {
+            DbSet.Remove(entity);
+
+            await SaveChangesAsync();
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
