@@ -12,7 +12,10 @@ namespace Library.Objects.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ConfigureSchema(modelBuilder);
+            ConfigureEntityUser(modelBuilder);
+            ConfigureEntityAuthor(modelBuilder);
+
+            ConfigureDeleteBehavior(modelBuilder);
         }
 
 #if DEBUG

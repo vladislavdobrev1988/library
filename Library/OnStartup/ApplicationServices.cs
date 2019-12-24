@@ -23,8 +23,10 @@ namespace Library.OnStartup
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddSingleton<IAccessTokenManager, AccessTokenManager>();
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+
             services.AddSingleton<IEmailValidator, EmailValidator>();
             services.AddSingleton<IPasswordValidator, PasswordValidator>();
+            services.AddSingleton<IDateValidator, DateValidator>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
