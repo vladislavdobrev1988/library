@@ -21,9 +21,9 @@ namespace Library.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAsync(AuthorProxy author)
         {
-            var id = await _authorModel.CreateAuthorAsync(author);
+            var response = await _authorModel.CreateAuthorAsync(author);
 
-            return StatusCode(HttpStatusCode.CREATED, new { id });
+            return StatusCode(HttpStatusCode.CREATED, response);
         }
 
         [HttpGet]

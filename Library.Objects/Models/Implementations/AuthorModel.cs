@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Helpers.Common;
 using Library.Objects.Helpers.Extensions;
+using Library.Objects.Helpers.Response;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
@@ -30,7 +31,7 @@ namespace Library.Objects.Models.Implementations
             _dateValidator = dateValidator;
         }
 
-        public async Task<int> CreateAuthorAsync(AuthorProxy author)
+        public async Task<IdResponse> CreateAuthorAsync(AuthorProxy author)
         {
             Validate(author);
 
@@ -46,7 +47,7 @@ namespace Library.Objects.Models.Implementations
 
             await _repository.SaveChangesAsync();
 
-            return entity.Id;
+            return new IdResponse(entity.Id);
         }
 
         public async Task<AuthorProxy> GetAuthorByIdAsync(int id)
