@@ -19,7 +19,7 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(AuthorProxy author)
+        public async Task<ActionResult> CreateAsync(AuthorProxy author)
         {
             var id = await _authorModel.CreateAuthorAsync(author);
 
@@ -28,9 +28,9 @@ namespace Library.Controllers
 
         [HttpGet]
         [IdRoute]
-        public async Task<AuthorProxy> GetById(int id)
+        public async Task<AuthorProxy> GetByIdAsync(int id)
         {
-            return new AuthorProxy { };
+            return await _authorModel.GetAuthorByIdAsync(id);
         }
     }
 }

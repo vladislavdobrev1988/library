@@ -24,7 +24,7 @@ namespace Library.Controllers
         [HttpPost]
         [Route("signup")]
         [AllowAnonymous]
-        public async Task<ActionResult> SignUp(UserProxy user)
+        public async Task<ActionResult> SignUpAsync(UserProxy user)
         {
             await _userModel.CreateUserAsync(user);
 
@@ -34,7 +34,7 @@ namespace Library.Controllers
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public async Task<AccessTokenResponse> LogIn(CredentialProxy credentials)
+        public async Task<AccessTokenResponse> LogInAsync(CredentialProxy credentials)
         {
             return await _accountModel.LogInAsync(credentials);
         }

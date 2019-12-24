@@ -19,5 +19,10 @@ namespace Library.Objects.Helpers.Common
         {
             throw new HttpResponseException(HttpStatusCode.UNAUTHORIZED, message);
         }
+
+        public static void NotFound(string message)
+        {
+            throw new HttpResponseException(HttpStatusCode.NOT_FOUND, message);
+        }
     }
 }
