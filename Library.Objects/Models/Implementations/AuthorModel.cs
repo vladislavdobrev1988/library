@@ -43,11 +43,9 @@ namespace Library.Objects.Models.Implementations
 
             var entity = MapToEntity(author);
 
-            _repository.Add(entity);
+            var id = await _repository.AddAsync(entity);
 
-            await _repository.SaveChangesAsync();
-
-            return new IdResponse(entity.Id);
+            return new IdResponse(id);
         }
 
         public async Task<AuthorProxy> GetAuthorByIdAsync(int id)

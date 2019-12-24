@@ -18,12 +18,12 @@ namespace Library.Objects.Repositories.Base
             DbSet = _context.Set<T>();
         }
 
-        public void Add(T entity)
+        public void AddWithoutSave(T entity)
         {
             DbSet.Add(entity);
         }
 
-        public void Add(IEnumerable<T> entities)
+        public void AddWithoutSave(IEnumerable<T> entities)
         {
             DbSet.AddRange(entities);
         }
@@ -31,6 +31,15 @@ namespace Library.Objects.Repositories.Base
         public async Task<T> GetByIdAsync(int id)
         {
             return await DbSet.FindAsync(id);
+        }
+
+        public async Task<int> AddAsync(T entity)
+        {
+            DbSet.Add(entity);
+
+            await SaveChangesAsync();
+
+            return entity.Id;
         }
 
         public async Task<int> SaveChangesAsync()

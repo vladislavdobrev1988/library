@@ -45,9 +45,7 @@ namespace Library.Objects.Models.Implementations
 
             var entity = MapToEntity(user);
 
-            _repository.Add(entity);
-
-            await _repository.SaveChangesAsync();
+            await _repository.AddAsync(entity);
         }
 
         public async Task<User> GetByEmailAsync(string email)

@@ -122,8 +122,7 @@ namespace Library.Tests.ModelTests
                u.Email == user.Email &&
                u.PasswordHash == passwordHash;
 
-            _repositoryMock.Verify(x => x.Add(It.Is(expected)), Times.Once);
-            _repositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+            _repositoryMock.Verify(x => x.AddAsync(It.Is(expected)), Times.Once);
         }
 
         private UserProxy GetUser()
