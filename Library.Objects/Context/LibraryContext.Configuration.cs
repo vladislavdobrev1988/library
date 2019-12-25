@@ -21,6 +21,8 @@ namespace Library.Objects.Context
 
         private void ConfigureEntityBook(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Book>().HasIndex(x => x.Title).IsUnique();
+
             modelBuilder.Entity<Book>().Property(x => x.ReleaseDate).HasColumnType(SqlDataType.DATE);
         }
 

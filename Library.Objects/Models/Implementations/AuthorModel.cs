@@ -21,6 +21,7 @@ namespace Library.Objects.Models.Implementations
             public const string AUTHOR_EXISTS = "Author with the same name already exists";
             public const string NOT_FOUND_FORMAT = "Author with id {0} was not found";
             public const string AUTHOR_HAS_BOOKS = "Unable to delete author because of book references";
+            public const string NOBEL_PRIZE_REQUIRED = "Nobel prize boolean value is required";
         }
 
         private readonly IAuthorRepository _repository;
@@ -80,6 +81,8 @@ namespace Library.Objects.Models.Implementations
             await _repository.RemoveAsync(author);
         }
 
+        #region private
+
         private async Task<Author> GetByIdAsync(int id)
         {
             var author = await _repository.GetByIdAsync(id);
@@ -110,7 +113,7 @@ namespace Library.Objects.Models.Implementations
             entity.LastName = proxy.LastName;
             entity.DateOfBirth = DateTime.Parse(proxy.DateOfBirth);
             entity.DateOfDeath = deceased ? DateTime.Parse(proxy.DateOfDeath) : (DateTime?)null;
-
+            entity.NobelPrize = proxy.NobelPrize.Value;
         }
 
         private AuthorProxy MapToProxy(Author author)
@@ -121,7 +124,8 @@ namespace Library.Objects.Models.Implementations
                 FirstName = author.FirstName,
                 LastName = author.LastName,
                 DateOfBirth = author.DateOfBirth.ToIsoDateString(),
-                DateOfDeath = author.DateOfDeath.HasValue ? author.DateOfDeath.Value.ToIsoDateString() : null
+                DateOfDeath = author.DateOfDeath.HasValue ? author.DateOfDeath.Value.ToIsoDateString() : null,
+                NobelPrize = author.NobelPrize
             };
         }
 
@@ -142,6 +146,11 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.BadRequest(ErrorMessage.LAST_NAME_REQUIRED);
             }
 
+            if (!author.NobelPrize.HasValue)
+            {
+                ThrowHttp.BadRequest(ErrorMessage.NOBEL_PRIZE_REQUIRED);
+            }
+
             var dateOfBirthError = _dateValidator.Validate(author.DateOfBirth);
             if (dateOfBirthError != null)
             {
@@ -159,5 +168,7 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.BadRequest(dateOfDeathError);
             }
         }
+
+        #endregion
     }
 }

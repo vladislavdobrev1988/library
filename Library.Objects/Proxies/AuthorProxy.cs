@@ -9,5 +9,6 @@ namespace Library.Objects.Proxies
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
         public string DateOfDeath { get; set; }
+        public bool? NobelPrize { get; set; }
     }
 }

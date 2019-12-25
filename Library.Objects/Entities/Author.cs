@@ -21,6 +21,9 @@ namespace Library.Objects.Entities
 
         public DateTime? DateOfDeath { get; set; }
 
+        [Required]
+        public bool NobelPrize { get; set; }
+
         public IList<Book> Books { get; set; }
     }
 }
