@@ -79,6 +79,8 @@ namespace Library.Objects.Models.Implementations
         {
             var author = await GetByIdAsync(id);
 
+            // validate has no books
+
             await _repository.RemoveAsync(author);
         }
 
