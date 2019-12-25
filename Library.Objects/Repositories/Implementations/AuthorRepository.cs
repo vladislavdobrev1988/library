@@ -13,7 +13,12 @@ namespace Library.Objects.Repositories.Implementations
 
         public async Task<Author> GetByNameAsync(string firstName, string lastName)
         {
-            return await DbSet.FirstOrDefaultAsync(x => x.FirstName == firstName && x.LastName == lastName);
+            return await Context.Authors.FirstOrDefaultAsync(x => x.FirstName == firstName && x.LastName == lastName);
+        }
+
+        public async Task<int> GetBookCount(int authorId)
+        {
+            return await Context.Books.CountAsync(x => x.AuthorId == authorId);
         }
     }
 }

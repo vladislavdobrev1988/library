@@ -20,6 +20,7 @@ namespace Library.Objects.Models.Implementations
             public const string LAST_NAME_REQUIRED = "Last name is required";
             public const string AUTHOR_EXISTS = "Author with the same name already exists";
             public const string NOT_FOUND_FORMAT = "Author with id {0} was not found";
+            public const string AUTHOR_HAS_BOOKS = "Unable to delete author because of book references";
         }
 
         private readonly IAuthorRepository _repository;
@@ -35,11 +36,7 @@ namespace Library.Objects.Models.Implementations
         {
             Validate(author);
 
-            var existing = await _repository.GetByNameAsync(author.FirstName, author.LastName);
-            if (existing != null)
-            {
-                ThrowHttp.Conflict(ErrorMessage.AUTHOR_EXISTS);
-            }
+            await ValidateUniqueness(author.FirstName, author.LastName, null);
 
             var entity = new Author();
 
@@ -56,12 +53,7 @@ namespace Library.Objects.Models.Implementations
 
             var entity = await GetByIdAsync(id);
 
-            var existing = await _repository.GetByNameAsync(author.FirstName, author.LastName);
-
-            if (existing != null && existing.Id != entity.Id)
-            {
-                ThrowHttp.Conflict(ErrorMessage.AUTHOR_EXISTS);
-            }
+            await ValidateUniqueness(author.FirstName, author.LastName, id);
 
             MapToEntity(author, entity);
 
@@ -79,7 +71,11 @@ namespace Library.Objects.Models.Implementations
         {
             var author = await GetByIdAsync(id);
 
-            // validate has no books
+            var bookCount = await _repository.GetBookCount(id);
+            if (bookCount > 0)
+            {
+                ThrowHttp.Conflict(ErrorMessage.AUTHOR_HAS_BOOKS);
+            }
 
             await _repository.RemoveAsync(author);
         }
@@ -94,6 +90,16 @@ namespace Library.Objects.Models.Implementations
             }
 
             return author;
+        }
+
+        private async Task ValidateUniqueness(string firstName, string lastName, int? authorId)
+        {
+            var duplicate = await _repository.GetByNameAsync(firstName, lastName);
+
+            if (duplicate != null && duplicate.Id != authorId)
+            {
+                ThrowHttp.Conflict(ErrorMessage.AUTHOR_EXISTS);
+            }
         }
 
         private void MapToEntity(AuthorProxy proxy, Author entity)

@@ -7,5 +7,6 @@ namespace Library.Objects.Repositories.Interfaces
     public interface IAuthorRepository : IBaseRepository<Author>
     {
         Task<Author> GetByNameAsync(string firstName, string lastName);
+        Task<int> GetBookCount(int authorId);
     }
 }

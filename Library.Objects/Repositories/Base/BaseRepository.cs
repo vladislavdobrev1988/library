@@ -1,41 +1,41 @@
-﻿using Library.Objects.Context;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Library.Objects.Context;
 using Library.Objects.Entities.Base;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Library.Objects.Repositories.Base
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        private readonly LibraryContext _context;
+        private readonly DbSet<T> _dbSet;
 
-        protected DbSet<T> DbSet { get; }
+        protected LibraryContext Context { get; }
 
         public BaseRepository(LibraryContext context)
         {
-            _context = context;
-            DbSet = _context.Set<T>();
+            _dbSet = context.Set<T>();
+            Context = context;
         }
 
         public void AddWithoutSave(T entity)
         {
-            DbSet.Add(entity);
+            _dbSet.Add(entity);
         }
 
         public void AddWithoutSave(IEnumerable<T> entities)
         {
-            DbSet.AddRange(entities);
+            _dbSet.AddRange(entities);
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await DbSet.FindAsync(id);
+            return await _dbSet.FindAsync(id);
         }
 
         public async Task<int> AddAsync(T entity)
         {
-            DbSet.Add(entity);
+            _dbSet.Add(entity);
 
             await SaveChangesAsync();
 
@@ -44,14 +44,14 @@ namespace Library.Objects.Repositories.Base
 
         public async Task RemoveAsync(T entity)
         {
-            DbSet.Remove(entity);
+            _dbSet.Remove(entity);
 
             await SaveChangesAsync();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            return await Context.SaveChangesAsync();
         }
     }
 }
