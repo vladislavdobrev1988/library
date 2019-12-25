@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Helpers.Common;
@@ -36,7 +37,7 @@ namespace Library.Objects.Models.Implementations
         {
             Validate(book);
 
-            await _authorModel.GetAuthorByIdAsync(book.AuthorId);
+            await _authorModel.ValidateExistingAuthorAsync(book.AuthorId);
 
             await ValidateUniqueness(book.Title, null);
 
@@ -55,7 +56,7 @@ namespace Library.Objects.Models.Implementations
 
             var entity = await GetByIdAsync(id);
 
-            await _authorModel.GetAuthorByIdAsync(book.AuthorId);
+            await _authorModel.ValidateExistingAuthorAsync(book.AuthorId);
 
             await ValidateUniqueness(book.Title, id);
 
@@ -76,6 +77,15 @@ namespace Library.Objects.Models.Implementations
             var book = await GetByIdAsync(id);
 
             await _repository.RemoveAsync(book);
+        }
+
+        public async Task<BookProxy[]> GetBooksByAuthorAsync(int authorId)
+        {
+            await _authorModel.ValidateExistingAuthorAsync(authorId);
+
+            var books = await _repository.GetByAuthorAsync(authorId);
+
+            return books.Select(MapToProxy).ToArray();
         }
 
         #region private

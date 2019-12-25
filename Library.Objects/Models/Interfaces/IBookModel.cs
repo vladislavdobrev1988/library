@@ -10,5 +10,6 @@ namespace Library.Objects.Models.Interfaces
         Task UpdateBookAsync(int id, BookProxy book);
         Task<BookProxy> GetBookByIdAsync(int id);
         Task DeleteBookAsync(int id);
+        Task<BookProxy[]> GetBooksByAuthorAsync(int authorId);
     }
 }

@@ -81,6 +81,11 @@ namespace Library.Objects.Models.Implementations
             await _repository.RemoveAsync(author);
         }
 
+        public async Task ValidateExistingAuthorAsync(int id)
+        {
+            await GetByIdAsync(id);
+        }
+
         #region private
 
         private async Task<Author> GetByIdAsync(int id)

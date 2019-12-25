@@ -10,5 +10,6 @@ namespace Library.Objects.Models.Interfaces
         Task UpdateAuthorAsync(int id, AuthorProxy author);
         Task<AuthorProxy> GetAuthorByIdAsync(int id);
         Task DeleteAuthorAsync(int id);
+        Task ValidateExistingAuthorAsync(int id);
     }
 }

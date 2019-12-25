@@ -12,10 +12,12 @@ namespace Library.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorModel _authorModel;
+        private readonly IBookModel _bookModel;
 
-        public AuthorController(IAuthorModel authorModel)
+        public AuthorController(IAuthorModel authorModel, IBookModel bookModel)
         {
             _authorModel = authorModel;
+            _bookModel = bookModel;
         }
 
         [HttpPost]
@@ -49,6 +51,13 @@ namespace Library.Controllers
             await _authorModel.DeleteAuthorAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{id}/books")]
+        public async Task<BookProxy[]> GetBooksByAuthorAsync(int id)
+        {
+            return await _bookModel.GetBooksByAuthorAsync(id);
         }
     }
 }
