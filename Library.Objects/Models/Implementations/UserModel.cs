@@ -12,11 +12,6 @@ namespace Library.Objects.Models.Implementations
 {
     public class UserModel : IUserModel
     {
-        private readonly IUserRepository _repository;
-        private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IEmailValidator _emailValidator;
-        private readonly IPasswordValidator _passwordValidator;
-
         public static class ErrorMessage
         {
             public const string USER_REQUIRED = "User is required";
@@ -24,6 +19,11 @@ namespace Library.Objects.Models.Implementations
             public const string LAST_NAME_REQUIRED = "Last name is required";
             public const string EMAIL_EXISTS = "User with the same email already exists";
         }
+
+        private readonly IUserRepository _repository;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IEmailValidator _emailValidator;
+        private readonly IPasswordValidator _passwordValidator;
 
         public UserModel(IUserRepository repository, IPasswordHasher<User> passwordHasher, IEmailValidator emailValidator, IPasswordValidator passwordValidator)
         {

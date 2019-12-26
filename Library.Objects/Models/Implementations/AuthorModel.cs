@@ -72,7 +72,7 @@ namespace Library.Objects.Models.Implementations
         {
             var author = await GetByIdAsync(id);
 
-            var bookCount = await _repository.GetBookCount(id);
+            var bookCount = await _repository.GetBookCountAsync(id);
             if (bookCount > 0)
             {
                 ThrowHttp.Conflict(ErrorMessage.AUTHOR_HAS_BOOKS);

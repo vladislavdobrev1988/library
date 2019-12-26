@@ -13,15 +13,15 @@ namespace Library.Objects.Models.Implementations
 {
     public class AccountModel : IAccountModel
     {
-        private readonly IUserModel _userModel;
-        private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IAccessTokenManager _accessTokenManager;
-
         public static class ErrorMessage
         {
             public const string CREDENTIALS_REQUIRED = "Credentials object is required";
             public const string CREDENTIAL_MISMATCH = "Email or password mismatch";
         }
+
+        private readonly IUserModel _userModel;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IAccessTokenManager _accessTokenManager;
 
         public AccountModel(IUserModel userModel, IPasswordHasher<User> passwordHasher, IAccessTokenManager accessTokenManager)
         {
@@ -48,6 +48,13 @@ namespace Library.Objects.Models.Implementations
             return new AccessTokenResponse(token);
         }
 
+        private bool HasPasswordMatch(string hashedPassword, string password)
+        {
+            var result = _passwordHasher.VerifyHashedPassword(null, hashedPassword, password);
+
+            return result == PasswordVerificationResult.Success;
+        }
+
         private void ValidateCredentials(CredentialProxy credentials)
         {
             if (credentials == null)
@@ -64,13 +71,6 @@ namespace Library.Objects.Models.Implementations
             {
                 ThrowHttp.BadRequest(CommonErrorMessage.PASSWORD_REQUIRED);
             }
-        }
-
-        private bool HasPasswordMatch(string hashedPassword, string password)
-        {
-            var result = _passwordHasher.VerifyHashedPassword(null, hashedPassword, password);
-
-            return result == PasswordVerificationResult.Success;
         }
     }
 }
