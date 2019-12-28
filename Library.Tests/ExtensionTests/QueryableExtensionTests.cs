@@ -47,7 +47,24 @@ namespace Library.Tests.ExtensionTests
         }
 
         [TestMethod]
-        public void GetPage_ValidRequest_ReturnsExpectedResult()
+        public void GetPage_ValidRequest1_ReturnsExpectedResult()
+        {
+            var pageRequest = new PageRequest
+            {
+                Page = 1,
+                Size = 2
+            };
+
+            var result = _source.GetPage(pageRequest).ToArray();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(pageRequest.Size, result.Length);
+            Assert.AreEqual(A, result[0]);
+            Assert.AreEqual(B, result[1]);
+        }
+
+        [TestMethod]
+        public void GetPage_ValidRequest2_ReturnsExpectedResult()
         {
             var pageRequest = new PageRequest
             {
@@ -61,6 +78,22 @@ namespace Library.Tests.ExtensionTests
             Assert.AreEqual(pageRequest.Size, result.Length);
             Assert.AreEqual(C, result[0]);
             Assert.AreEqual(D, result[1]);
+        }
+
+        [TestMethod]
+        public void GetPage_ValidRequest3_ReturnsExpectedResult()
+        {
+            var pageRequest = new PageRequest
+            {
+                Page = 2,
+                Size = 3
+            };
+
+            var result = _source.GetPage(pageRequest).ToArray();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Length);
+            Assert.AreEqual(D, result.Single());
         }
     }
 }
