@@ -15,7 +15,7 @@ namespace Library.Objects.Models.Implementations
 {
     public class AuthorModel : IAuthorModel
     {
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string AUTHOR_REQUIRED = "Author object is required";
             public const string FIRST_NAME_REQUIRED = "First name is required";

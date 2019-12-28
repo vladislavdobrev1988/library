@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Exceptions;
+using Library.Objects.Helpers.Constants;
 using Library.Objects.Models.Implementations;
 using Library.Objects.Proxies;
 using Library.Objects.Repositories.Interfaces;
@@ -39,6 +40,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(null));
 
             Assert.AreEqual(UserModel.ErrorMessage.USER_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -53,6 +55,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
             Assert.AreEqual(ERROR_MESSAGE, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -67,6 +70,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
             Assert.AreEqual(ERROR_MESSAGE, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -79,6 +83,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
             Assert.AreEqual(UserModel.ErrorMessage.FIRST_NAME_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -91,6 +96,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
             Assert.AreEqual(UserModel.ErrorMessage.LAST_NAME_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -103,6 +109,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 
             Assert.AreEqual(UserModel.ErrorMessage.EMAIL_EXISTS, ex.Message);
+            Assert.AreEqual(HttpStatusCode.CONFLICT, ex.StatusCode);
         }
 
         [TestMethod]

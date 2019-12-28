@@ -41,6 +41,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(null));
 
             Assert.AreEqual(AccountModel.ErrorMessage.CREDENTIALS_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -52,6 +53,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -63,6 +65,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.EMAIL_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -74,6 +77,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -85,6 +89,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(CommonErrorMessage.PASSWORD_REQUIRED, ex.Message);
+            Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
 
         [TestMethod]
@@ -99,6 +104,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(AccountModel.ErrorMessage.CREDENTIAL_MISMATCH, ex.Message);
+            Assert.AreEqual(HttpStatusCode.UNAUTHORIZED, ex.StatusCode);
         }
 
         [TestMethod]
@@ -123,6 +129,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.LogInAsync(credentials));
 
             Assert.AreEqual(AccountModel.ErrorMessage.CREDENTIAL_MISMATCH, ex.Message);
+            Assert.AreEqual(HttpStatusCode.UNAUTHORIZED, ex.StatusCode);
         }
 
         [TestMethod]
