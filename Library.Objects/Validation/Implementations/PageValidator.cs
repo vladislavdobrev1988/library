@@ -5,7 +5,7 @@ namespace Library.Objects.Validation.Implementations
 {
     public class PageValidator : IPageValidator
     {
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string REQUIRED = "Page request is required";
             public const string PAGE = "Page value must be positive integer";
