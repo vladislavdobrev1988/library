@@ -23,7 +23,7 @@ namespace Library.Objects.Context
         {
             modelBuilder.Entity<Book>().HasIndex(x => x.Title).IsUnique();
 
-            modelBuilder.Entity<Book>().Property(x => x.ReleaseDate).HasColumnType(SqlDataType.DATE);
+            modelBuilder.Entity<Book>().Property(x => x.PublishDate).HasColumnType(SqlDataType.DATE);
         }
 
         private void ConfigureDeleteBehavior(ModelBuilder modelBuilder)

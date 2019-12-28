@@ -115,7 +115,7 @@ namespace Library.Objects.Models.Implementations
         private void MapToEntity(BookProxy proxy, Book entity)
         {
             entity.Title = proxy.Title;
-            entity.ReleaseDate = DateTime.Parse(proxy.ReleaseDate);
+            entity.PublishDate = DateTime.Parse(proxy.PublishDate);
             entity.AuthorId = proxy.AuthorId;
         }
 
@@ -125,7 +125,7 @@ namespace Library.Objects.Models.Implementations
             {
                 Id = book.Id,
                 Title = book.Title,
-                ReleaseDate = book.ReleaseDate.ToIsoDateString(),
+                PublishDate = book.PublishDate.ToIsoDateString(),
                 AuthorId = book.AuthorId
             };
         }
@@ -142,7 +142,7 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.BadRequest(ErrorMessage.TITLE_REQUIRED);
             }
 
-            var dateError = _dateValidator.Validate(book.ReleaseDate);
+            var dateError = _dateValidator.Validate(book.PublishDate);
             if (dateError != null)
             {
                 ThrowHttp.BadRequest(dateError);

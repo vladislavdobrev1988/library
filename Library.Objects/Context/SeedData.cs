@@ -22,12 +22,28 @@ namespace Library.Objects.Context
                         new Book
                         {
                             Title = "The Grapes of Wrath",
-                            ReleaseDate = DateTime.Parse("1939-04-14")
+                            PublishDate = DateTime.Parse("1939-04-14")
                         },
                         new Book
                         {
                             Title = "East of Eden",
-                            ReleaseDate = DateTime.Parse("1952-09-19")
+                            PublishDate = DateTime.Parse("1952-09-19")
+                        }
+                    }
+                },
+                new Author
+                {
+                    FirstName = "Harper",
+                    LastName = "Lee",
+                    DateOfBirth = DateTime.Parse("1926-04-28"),
+                    DateOfDeath = DateTime.Parse("2016-02-19"),
+                    NobelPrize = false,
+                    Books = new List<Book>
+                    {
+                        new Book
+                        {
+                            Title = "To Kill a Mockingbird",
+                            PublishDate = DateTime.Parse("1960-07-11")
                         }
                     }
                 }

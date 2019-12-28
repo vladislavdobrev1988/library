@@ -12,7 +12,7 @@ namespace Library.Objects.Entities
         public string Title { get; set; }
 
         [Required]
-        public DateTime ReleaseDate { get; set; }
+        public DateTime PublishDate { get; set; }
 
         public int AuthorId { get; set; }
 

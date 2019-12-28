@@ -5,7 +5,7 @@ namespace Library.Objects.Proxies
     public class BookProxy : BaseProxy
     {
         public string Title { get; set; }
-        public string ReleaseDate { get; set; }
+        public string PublishDate { get; set; }
         public int AuthorId { get; set; }
     }
 }
