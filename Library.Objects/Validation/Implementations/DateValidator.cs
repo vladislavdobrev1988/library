@@ -7,7 +7,7 @@ namespace Library.Objects.Validation.Implementations
 {
     public class DateValidator : IDateValidator
     {
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string REQUIRED = "Date is required";
             public const string INVALID_FORMAT = "\"{0}\" is invalid date. Expected format is: {1}";
