@@ -27,6 +27,7 @@ namespace Library.OnStartup
             services.AddSingleton<IEmailValidator, EmailValidator>();
             services.AddSingleton<IPasswordValidator, PasswordValidator>();
             services.AddSingleton<IDateValidator, DateValidator>();
+            services.AddSingleton<IPageValidator, PageValidator>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();

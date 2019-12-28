@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Library.Attributes;
 using Library.Objects.Helpers.Constants;
+using Library.Objects.Helpers.Request;
+using Library.Objects.Helpers.Response;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +53,12 @@ namespace Library.Controllers
             await _authorModel.DeleteAuthorAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<PageResponse<AuthorProxy>> GetPageAsync([FromQuery]PageRequest pageRequest)
+        {
+            return await _authorModel.GetAuthorPageAsync(pageRequest);
         }
 
         [HttpGet]

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Library.Objects.Entities;
 using Library.Objects.Helpers.Common;
 using Library.Objects.Helpers.Extensions;
+using Library.Objects.Helpers.Request;
 using Library.Objects.Helpers.Response;
 using Library.Objects.Models.Interfaces;
 using Library.Objects.Proxies;
@@ -26,11 +28,13 @@ namespace Library.Objects.Models.Implementations
 
         private readonly IAuthorRepository _repository;
         private readonly IDateValidator _dateValidator;
+        private readonly IPageValidator _pageValidator;
 
-        public AuthorModel(IAuthorRepository repository, IDateValidator dateValidator)
+        public AuthorModel(IAuthorRepository repository, IDateValidator dateValidator, IPageValidator pageValidator)
         {
             _repository = repository;
             _dateValidator = dateValidator;
+            _pageValidator = pageValidator;
         }
 
         public async Task<IdResponse> CreateAuthorAsync(AuthorProxy author)
@@ -79,6 +83,20 @@ namespace Library.Objects.Models.Implementations
             }
 
             await _repository.RemoveAsync(author);
+        }
+
+        public async Task<PageResponse<AuthorProxy>> GetAuthorPageAsync(PageRequest pageRequest)
+        {
+            var pageError = _pageValidator.Validate(pageRequest);
+            if (pageError != null)
+            {
+                ThrowHttp.BadRequest(pageError);
+            }
+
+            var page = await _repository.GetPageAsync(pageRequest);
+            var total = await _repository.GetCountAsync();
+
+            return new PageResponse<AuthorProxy>(page.Select(MapToProxy).ToArray(), total);
         }
 
         public async Task ValidateExistingAuthorAsync(int id)

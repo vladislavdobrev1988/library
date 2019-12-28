@@ -49,6 +49,11 @@ namespace Library.Objects.Repositories.Base
             await SaveChangesAsync();
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            return await _dbSet.CountAsync();
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await Context.SaveChangesAsync();

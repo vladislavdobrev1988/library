@@ -11,6 +11,7 @@ namespace Library.Objects.Repositories.Base
         Task<int> AddAsync(T entity);
         Task<T> GetByIdAsync(int id);
         Task RemoveAsync(T entity);
+        Task<int> GetCountAsync();
         Task<int> SaveChangesAsync();
     }
 }
