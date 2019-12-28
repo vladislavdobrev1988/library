@@ -20,10 +20,10 @@ namespace Library.Objects.Models.Implementations
             public const string AUTHOR_REQUIRED = "Author object is required";
             public const string FIRST_NAME_REQUIRED = "First name is required";
             public const string LAST_NAME_REQUIRED = "Last name is required";
+            public const string NOBEL_PRIZE_REQUIRED = "Nobel prize boolean value is required";
             public const string AUTHOR_EXISTS = "Author with the same name already exists";
             public const string NOT_FOUND_FORMAT = "Author with id {0} was not found";
             public const string AUTHOR_HAS_BOOKS = "Unable to delete author because of book references";
-            public const string NOBEL_PRIZE_REQUIRED = "Nobel prize boolean value is required";
         }
 
         private readonly IAuthorRepository _repository;
