@@ -35,5 +35,83 @@ namespace Library.Tests.ModelTests
             Assert.AreEqual(AuthorModel.ErrorMessage.AUTHOR_REQUIRED, ex.Message);
             Assert.AreEqual(HttpStatusCode.BAD_REQUEST, ex.StatusCode);
         }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_NullFirstName_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_EmptyFirstName_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_NullLastName_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_EmptyLastName_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_NullNobelPrize_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_InvalidDateOfBirth_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_InvalidDateOfDeath_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_AlreadyExists_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateAuthorAsync_ValidInput_WorksAsExpected()
+        {
+
+        }
+        
+        [TestMethod]
+        public async Task UpdateAuthorAsync_NullAuthor_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task UpdateAuthorAsync_AuthorNotFound_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task UpdateAuthorAsync_AlreadyExists_ThrowsException()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task UpdateAuthorAsync_ValidInput_WorksAsExpected()
+        {
+
+        }
     }
 }
