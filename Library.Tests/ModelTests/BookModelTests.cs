@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Library.Objects.Entities;
@@ -99,7 +100,7 @@ namespace Library.Tests.ModelTests
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateBookAsync(book));
 
             Assert.AreEqual(authorNotFoundException.Message, ex.Message);
-            Assert.AreEqual(HttpStatusCode.NOT_FOUND, ex.StatusCode);
+            Assert.AreEqual(authorNotFoundException.StatusCode, ex.StatusCode);
         }
 
         [TestMethod]
@@ -229,6 +230,108 @@ namespace Library.Tests.ModelTests
             Assert.AreEqual(proxy.AuthorId, entity.AuthorId);
 
             _repositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetBookByIdAsync_BookNotFound_ThrowsException()
+        {
+            const int ID = 1;
+
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.GetBookByIdAsync(ID));
+
+            var expectedExceptionMessage = string.Format(BookModel.ErrorMessage.NOT_FOUND_FORMAT, ID);
+
+            Assert.AreEqual(expectedExceptionMessage, ex.Message);
+            Assert.AreEqual(HttpStatusCode.NOT_FOUND, ex.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetBookByIdAsync_BookFound_ReturnsExpectedResult()
+        {
+            const int ID = 1;
+
+            var entity = GetEntity();
+
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(ID))
+                .Returns(Task.FromResult(entity));
+
+            var result = await _model.GetBookByIdAsync(ID);
+
+            Assert.AreEqual(entity.Id, result.Id);
+            Assert.AreEqual(entity.Title, result.Title);
+            Assert.AreEqual(entity.PublishDate.ToString(DateFormat.ISO_8601), result.PublishDate);
+            Assert.AreEqual(entity.AuthorId, result.AuthorId);
+        }
+
+        [TestMethod]
+        public async Task DeleteBookAsync_BookNotFound_ThrowsException()
+        {
+            const int ID = 1;
+
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.DeleteBookAsync(ID));
+
+            var expectedExceptionMessage = string.Format(BookModel.ErrorMessage.NOT_FOUND_FORMAT, ID);
+
+            Assert.AreEqual(expectedExceptionMessage, ex.Message);
+            Assert.AreEqual(HttpStatusCode.NOT_FOUND, ex.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task DeleteBookAsync_BookFound_WorksAsExpected()
+        {
+            const int ID = 1;
+
+            var entity = GetEntity();
+
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(ID))
+                .Returns(Task.FromResult(entity));
+
+            await _model.DeleteBookAsync(ID);
+
+            _repositoryMock.Verify(x => x.RemoveAsync(entity), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetBooksByAuthorAsync_BookNotFound_ThrowsException()
+        {
+            const int AUTHOR_ID = 1;
+
+            var authorNotFoundException = new HttpResponseException(HttpStatusCode.NOT_FOUND, "not found");
+
+            _authorModelMock
+                .Setup(x => x.ValidateExistingAuthorAsync(AUTHOR_ID))
+                .Throws(authorNotFoundException);
+
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.GetBooksByAuthorAsync(AUTHOR_ID));
+
+            Assert.AreEqual(authorNotFoundException.Message, ex.Message);
+            Assert.AreEqual(authorNotFoundException.StatusCode, ex.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetBooksByAuthorAsync_BookFound_ReturnsExpectedResult()
+        {
+            const int ID = 1;
+
+            var entity = GetEntity();
+
+            _repositoryMock
+                .Setup(x => x.GetByAuthorAsync(ID))
+                .Returns(Task.FromResult(new[] { entity }));
+
+            var result = await _model.GetBooksByAuthorAsync(ID);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Length);
+
+            var proxy = result.Single();
+
+            Assert.AreEqual(entity.Id, proxy.Id);
+            Assert.AreEqual(entity.Title, proxy.Title);
+            Assert.AreEqual(entity.PublishDate.ToString(DateFormat.ISO_8601), proxy.PublishDate);
+            Assert.AreEqual(entity.AuthorId, proxy.AuthorId);
         }
 
         private BookProxy GetProxy()
