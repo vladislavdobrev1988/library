@@ -303,6 +303,25 @@ namespace Library.Tests.ModelTests
         }
 
         [TestMethod]
+        public async Task DeleteAuthorByIdAsync_AuthorHasBooks_ThrowsException()
+        {
+            var entity = GetEntity();
+
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(entity.Id))
+                .Returns(Task.FromResult(entity));
+
+            _repositoryMock
+                .Setup(x => x.GetBookCountAsync(entity.Id))
+                .Returns(Task.FromResult(1));
+
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.DeleteAuthorAsync(entity.Id));
+
+            Assert.AreEqual(AuthorModel.ErrorMessage.AUTHOR_HAS_BOOKS, ex.Message);
+            Assert.AreEqual(HttpStatusCode.CONFLICT, ex.StatusCode);
+        }
+
+        [TestMethod]
         public async Task DeleteAuthorByIdAsync_AuthorFound_WorksAsExpected()
         {
             var entity = GetEntity();
