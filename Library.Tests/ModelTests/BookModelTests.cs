@@ -153,25 +153,82 @@ namespace Library.Tests.ModelTests
         [TestMethod]
         public async Task UpdateBookAsync_BookNotFound_ThrowsException()
         {
+            const int UPDATED_BOOK_ID = 1;
+            var book = GetProxy();
 
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.UpdateBookAsync(UPDATED_BOOK_ID, book));
+
+            var expectedExceptionMessage = string.Format(BookModel.ErrorMessage.NOT_FOUND_FORMAT, UPDATED_BOOK_ID);
+
+            Assert.AreEqual(expectedExceptionMessage, ex.Message);
+            Assert.AreEqual(HttpStatusCode.NOT_FOUND, ex.StatusCode);
         }
 
         [TestMethod]
         public async Task UpdateBookAsync_AuthorDoesNotExist_ThrowsException()
         {
+            const int UPDATED_BOOK_ID = 1;
+            var book = GetProxy();
 
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(UPDATED_BOOK_ID))
+                .Returns(Task.FromResult(new Book { Id = UPDATED_BOOK_ID }));
+
+            var authorNotFoundException = new HttpResponseException(HttpStatusCode.NOT_FOUND, "not found");
+
+            _authorModelMock
+                .Setup(x => x.ValidateExistingAuthorAsync(book.AuthorId))
+                .Throws(authorNotFoundException);
+
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.UpdateBookAsync(UPDATED_BOOK_ID, book));
+
+            Assert.AreEqual(authorNotFoundException.Message, ex.Message);
+            Assert.AreEqual(HttpStatusCode.NOT_FOUND, ex.StatusCode);
         }
 
         [TestMethod]
         public async Task UpdateBookAsync_BookAlreadyExists_ThrowsException()
         {
+            const int UPDATED_BOOK_ID = 1;
+            var book = GetProxy();
 
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(UPDATED_BOOK_ID))
+                .Returns(Task.FromResult(new Book { Id = UPDATED_BOOK_ID }));
+
+            _repositoryMock
+                .Setup(x => x.GetByTitleAsync(book.Title))
+                .Returns(Task.FromResult(new Book { Id = 5 }));
+
+            var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.UpdateBookAsync(UPDATED_BOOK_ID, book));
+
+            Assert.AreEqual(BookModel.ErrorMessage.BOOK_EXISTS, ex.Message);
+            Assert.AreEqual(HttpStatusCode.CONFLICT, ex.StatusCode);
         }
 
         [TestMethod]
         public async Task UpdateBookAsync_ValidInput_WorksAsExpected()
         {
+            const int UPDATED_BOOK_ID = 1;
+            var proxy = GetProxy();
 
+            var entity = new Book { Id = UPDATED_BOOK_ID };
+
+            _repositoryMock
+                .Setup(x => x.GetByIdAsync(UPDATED_BOOK_ID))
+                .Returns(Task.FromResult(entity));
+
+            _repositoryMock
+                .Setup(x => x.GetByTitleAsync(proxy.Title))
+                .Returns(Task.FromResult(new Book { Id = UPDATED_BOOK_ID }));
+
+            await _model.UpdateBookAsync(UPDATED_BOOK_ID, proxy);
+
+            Assert.AreEqual(proxy.Title, entity.Title);
+            Assert.AreEqual(DateTime.Parse(proxy.PublishDate), entity.PublishDate);
+            Assert.AreEqual(proxy.AuthorId, entity.AuthorId);
+
+            _repositoryMock.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         private BookProxy GetProxy()
