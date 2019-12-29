@@ -14,7 +14,7 @@ namespace Library.Objects.Models.Implementations
 {
     public class BookModel : IBookModel
     {
-        private static class ErrorMessage
+        public static class ErrorMessage
         {
             public const string BOOK_REQUIRED = "Book object is required";
             public const string TITLE_REQUIRED = "Title is required";
