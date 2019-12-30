@@ -46,6 +46,53 @@ namespace Library.Objects.Context
                             PublishDate = DateTime.Parse("1960-07-11")
                         }
                     }
+                },
+                new Author
+                {
+                    FirstName = "Pelham",
+                    LastName = "Wodehouse",
+                    DateOfBirth = DateTime.Parse("1881-10-15"),
+                    DateOfDeath = DateTime.Parse("1975-02-14"),
+                    NobelPrize = false,
+                    Books = new List<Book>
+                    {
+                        new Book
+                        {
+                            Title = "Joy in the Morning",
+                            PublishDate = DateTime.Parse("1946-08-22")
+                        },
+                        new Book
+                        {
+                            Title = "Psmith in the City",
+                            PublishDate = DateTime.Parse("1910-09-23")
+                        },
+                        new Book
+                        {
+                            Title = "Uncle Dynamite",
+                            PublishDate = DateTime.Parse("1948-10-22")
+                        }
+                    }
+                },
+                new Author
+                {
+                    FirstName = "Kurt",
+                    LastName = "Vonnegut",
+                    DateOfBirth = DateTime.Parse("1922-11-11"),
+                    DateOfDeath = DateTime.Parse("2007-04-11"),
+                    NobelPrize = false,
+                    Books = new List<Book>
+                    {
+                        new Book
+                        {
+                            Title = "Breakfast of Champions",
+                            PublishDate = DateTime.Parse("1973-07-12")
+                        },
+                        new Book
+                        {
+                            Title = "Mother Night",
+                            PublishDate = DateTime.Parse("1961-04-17")
+                        }
+                    }
                 }
             };
         }
