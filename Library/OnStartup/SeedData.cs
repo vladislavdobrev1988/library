@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Library.Objects.Entities;
 
-namespace Library.Objects.Context
+namespace Library.OnStartup
 {
     public static class SeedData
     {
