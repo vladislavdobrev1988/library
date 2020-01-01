@@ -33,7 +33,7 @@ namespace Library
                 .AddJsonFormatters()
                 .AddMvcOptions(AddMvcOptions);
 
-            services.AddDbContext<LibraryContext>(options => options.UseSqlServer(ConnectionString));
+            services.AddDbContext<LibraryContext>(AddDbContextOptions);
 
             var logFilePath = Path.Combine(_hostingEnvironment.ContentRootPath, LogFolder);
 
@@ -50,6 +50,11 @@ namespace Library
         {
             options.Filters.Add<AuthorizationFilter>();
             options.Filters.Add<ExceptionFilter>();
+        }
+
+        private void AddDbContextOptions(DbContextOptionsBuilder builder)
+        {
+            builder.UseSqlServer(ConnectionString);
         }
     }
 }

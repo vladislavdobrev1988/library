@@ -312,8 +312,8 @@ namespace Library.Tests.ModelTests
                 .Returns(Task.FromResult(entity));
 
             _repositoryMock
-                .Setup(x => x.GetBookCountAsync(entity.Id))
-                .Returns(Task.FromResult(1));
+                .Setup(x => x.AuthorHasBooks(entity.Id))
+                .Returns(Task.FromResult(true));
 
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.DeleteAuthorAsync(entity.Id));
 
