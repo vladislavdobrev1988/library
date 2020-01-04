@@ -37,7 +37,7 @@ namespace Library.Objects.Validation.Implementations
                 return ErrorMessage.MinCharacterCount;
             }
 
-            if (password.Any(ch => !IsVadlidCharacter(ch)))
+            if (password.Any(ch => !IsValidCharacter(ch)))
             {
                 return ErrorMessage.ValidCharacters;
             }
@@ -65,7 +65,7 @@ namespace Library.Objects.Validation.Implementations
             return null;
         }
 
-        private static bool IsVadlidCharacter(char ch)
+        private static bool IsValidCharacter(char ch)
         {
             return
                 IsLowerLatinLetter(ch) ||
