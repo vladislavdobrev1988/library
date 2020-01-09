@@ -76,7 +76,7 @@ namespace Library.Objects.Models.Implementations
         {
             var author = await GetByIdAsync(id);
 
-            var hasBooks = await _repository.AuthorHasBooks(id);
+            var hasBooks = await _repository.AuthorHasBooksAsync(id);
             if (hasBooks)
             {
                 ThrowHttp.Conflict(ErrorMessage.AUTHOR_HAS_BOOKS);

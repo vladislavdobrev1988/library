@@ -104,7 +104,7 @@ namespace Library.Tests.ModelTests
         {
             var user = GetUser();
 
-            _repositoryMock.Setup(x => x.GetByEmail(user.Email)).Returns(Task.FromResult(new User()));
+            _repositoryMock.Setup(x => x.GetByEmailAsync(user.Email)).Returns(Task.FromResult(new User()));
 
             var ex = await Assert.ThrowsExceptionAsync<HttpResponseException>(async () => await _model.CreateUserAsync(user));
 

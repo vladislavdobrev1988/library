@@ -11,7 +11,7 @@ namespace Library.Objects.Repositories.Implementations
     {
         public UserRepository(LibraryContext context) : base(context) { }
 
-        public async Task<User> GetByEmail(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
             return await Context.Users.FirstOrDefaultAsync(x => x.Email == email);
         }

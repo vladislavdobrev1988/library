@@ -37,7 +37,7 @@ namespace Library.Objects.Models.Implementations
         {
             ValidateUser(user);
 
-            var existing = await _repository.GetByEmail(user.Email);
+            var existing = await _repository.GetByEmailAsync(user.Email);
             if (existing != null)
             {
                 ThrowHttp.Conflict(ErrorMessage.EMAIL_EXISTS);
@@ -55,7 +55,7 @@ namespace Library.Objects.Models.Implementations
                 ThrowHttp.BadRequest(CommonErrorMessage.EMAIL_REQUIRED);
             }
 
-            return await _repository.GetByEmail(email);
+            return await _repository.GetByEmailAsync(email);
         }
 
         private User MapToEntity(UserProxy user)

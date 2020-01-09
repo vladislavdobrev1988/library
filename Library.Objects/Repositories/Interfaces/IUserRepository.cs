@@ -6,6 +6,6 @@ namespace Library.Objects.Repositories.Interfaces
 {
     public interface IUserRepository : IBaseRepository<User>
     {
-        Task<User> GetByEmail(string email);
+        Task<User> GetByEmailAsync(string email);
     }
 }

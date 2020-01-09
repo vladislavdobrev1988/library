@@ -18,7 +18,7 @@ namespace Library.Objects.Repositories.Implementations
             return await Context.Authors.FirstOrDefaultAsync(x => x.FirstName == firstName && x.LastName == lastName);
         }
 
-        public async Task<bool> AuthorHasBooks(int authorId)
+        public async Task<bool> AuthorHasBooksAsync(int authorId)
         {
             return await Context.Books.AnyAsync(x => x.AuthorId == authorId);
         }

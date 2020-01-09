@@ -12,8 +12,8 @@ namespace Library.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private IAccountModel _accountModel;
-        private IUserModel _userModel;
+        private readonly IAccountModel _accountModel;
+        private readonly IUserModel _userModel;
 
         public AccountController(IAccountModel accountModel, IUserModel userModel)
         {
